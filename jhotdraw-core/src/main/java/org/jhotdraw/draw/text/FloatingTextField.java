@@ -7,6 +7,7 @@
  */
 package org.jhotdraw.draw.text;
 
+import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.TextHolderFigure;
 import java.awt.*;
 import java.awt.event.*;
@@ -67,6 +68,7 @@ public class FloatingTextField {
      * Creates the overlay for the given Container using a
      * specific font.
      */
+    @FeatureEntryPoint("Overlay")
     public void createOverlay(DrawingView view, TextHolderFigure figure) {
         view.getComponent().add(textField, 0);
         textField.setText(figure.getText());
@@ -79,6 +81,7 @@ public class FloatingTextField {
         updateWidget();
     }
 
+    @FeatureEntryPoint("OverlayUpdater")
     protected void updateWidget() {
         Font font = editedFigure.getFont();
         font = font.deriveFont(font.getStyle(), (float) (editedFigure.getFontSize() * view.getScaleFactor()));
