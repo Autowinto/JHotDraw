@@ -95,6 +95,7 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
     }
 
     @FeatureEntryPoint("EditChange")
+    @Override
     protected void endEdit() {
         if (typingTarget != null) {
             typingTarget.willChange();

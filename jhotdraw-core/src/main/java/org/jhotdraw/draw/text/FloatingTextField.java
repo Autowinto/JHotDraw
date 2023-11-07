@@ -79,6 +79,7 @@ public class FloatingTextField {
         updateWidget();
     }
 
+    //Long asf method
     protected void updateWidget() {
         Font font = editedFigure.getFont();
         font = font.deriveFont(font.getStyle(), (float) (editedFigure.getFontSize() * view.getScaleFactor()));
@@ -142,6 +143,7 @@ public class FloatingTextField {
     /**
      * Removes the overlay.
      */
+    //Duplicate code
     public void endOverlay() {
         view.getComponent().requestFocus();
         if (textField != null) {

@@ -18,7 +18,9 @@ import org.jhotdraw.draw.*;
 import static org.jhotdraw.draw.AttributeKeys.*;
 import org.jhotdraw.draw.event.ToolEvent;
 import org.jhotdraw.draw.event.ToolListener;
+import org.jhotdraw.draw.figure.TextHolderFigure;
 import org.jhotdraw.draw.handle.Handle;
+import org.jhotdraw.draw.text.FloatingTextField;
 
 /**
  * This abstract class can be extended to implement a {@link Tool}.
@@ -479,4 +481,19 @@ public abstract class AbstractTool extends AbstractBean implements Tool {
     public boolean supportsHandleInteraction() {
         return false;
     }
+
+    protected TextHolderFigure beginEdit(TextHolderFigure textHolder, FloatingTextField textField, TextHolderFigure typingTarget, ActionListener actionListener) {
+        if (textField == null) {
+            textField = new FloatingTextField();
+            textField.addActionListener(actionListener);
+        }
+        if (textHolder != typingTarget && typingTarget != null) {
+            endEdit();
+        }
+        textField.createOverlay(getView(), textHolder);
+        textField.requestFocus();
+        return textHolder;
+    }
+    protected abstract void endEdit();
 }
+

@@ -102,16 +102,20 @@ public class TextCreationTool extends CreationTool implements ActionListener {
             TextHolderFigure textHolder = (TextHolderFigure) getCreatedFigure();
             getView().clearSelection();
             getView().addToSelection(textHolder);
-            beginEdit(textHolder);
+            typingTarget = beginEdit(textHolder,textField,typingTarget,this);
             updateCursor(getView(), e.getPoint());
         }
     }
 
     @Override
     public void mouseDragged(java.awt.event.MouseEvent e) {
+        //TODO idk
     }
 
-    protected void beginEdit(TextHolderFigure textHolder) {
+
+    //Code is duplicated between TextCreationTool and TextEditingTool
+    //Not sure where to put this
+    /*protected void beginEdit(TextHolderFigure textHolder) {
         if (textField == null) {
             textField = new FloatingTextField();
             textField.addActionListener(this);
@@ -122,12 +126,14 @@ public class TextCreationTool extends CreationTool implements ActionListener {
         textField.createOverlay(getView(), textHolder);
         textField.requestFocus();
         typingTarget = textHolder;
-    }
+    }*/
 
     @Override
     public void mouseReleased(MouseEvent evt) {
+        // TODO document why this method is empty
     }
 
+    //Long asf function
     protected void endEdit() {
         if (typingTarget != null) {
             typingTarget.willChange();
@@ -145,6 +151,8 @@ public class TextCreationTool extends CreationTool implements ActionListener {
                     typingTarget.changed();
                 }
             }
+            //Also duplicated code
+            //Again, not sure where to put this?
             UndoableEdit edit = new AbstractUndoableEdit() {
                 private static final long serialVersionUID = 1L;
 
@@ -195,7 +203,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
 
     @Override
     protected void creationFinished(Figure createdFigure) {
-        beginEdit((TextHolderFigure) createdFigure);
+        typingTarget = beginEdit((TextHolderFigure) createdFigure, textField,typingTarget, this);
         updateCursor(getView(), new Point(0, 0));
     }
 
