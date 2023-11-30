@@ -206,7 +206,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
                 transformedBounds.getHeight());
 
         if (get(TRANSFORM) == null) {
-            double hitGrowth = SVGAttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1d;
+            double hitGrowth = AttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1d;
             Geom.grow(drawingArea, hitGrowth, hitGrowth);
         } else {
             double strokeTotalWidth = AttributeKeys.getStrokeTotalWidth(this, 1.0);
@@ -267,10 +267,10 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         if (cachedHitShape == null) {
             if (get(FILL_COLOR) != null || get(FILL_GRADIENT) != null) {
                 cachedHitShape = new GrowStroke(
-                        (float) SVGAttributeKeys.getStrokeTotalWidth(this, 1.0) / 2f,
-                        (float) SVGAttributeKeys.getStrokeTotalMiterLimit(this, 1.0)).createStrokedShape(getTransformedShape());
+                        (float) AttributeKeys.getStrokeTotalWidth(this, 1.0) / 2f,
+                        (float) AttributeKeys.getStrokeTotalMiterLimit(this, 1.0)).createStrokedShape(getTransformedShape());
             } else {
-                cachedHitShape = SVGAttributeKeys.getHitStroke(this, 1.0).createStrokedShape(getTransformedShape());
+                cachedHitShape = AttributeKeys.getHitStroke(this, 1.0).createStrokedShape(getTransformedShape());
             }
         }
         return cachedHitShape;
