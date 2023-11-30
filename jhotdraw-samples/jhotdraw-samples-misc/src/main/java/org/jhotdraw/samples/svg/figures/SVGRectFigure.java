@@ -99,39 +99,62 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         }
     }
 
+    /**
+     * Draws the stroke of the round rectangle.
+     *
+     * @param g the Graphics2D object to draw on
+     */
     @FeatureEntryPoint(value = "rectangle tool")
     @Override
     protected void drawStroke(Graphics2D g) {
-        if (roundrect.archeight == 0 && roundrect.arcwidth == 0) {
+        if (roundrect.arcwidth == 0 && roundrect.archeight == 0) {
             g.draw(roundrect.getBounds2D());
         } else {
-            // We have to generate the path for the round rectangle manually,
-            // because the path of a Java RoundRectangle is drawn counter clockwise
-            // whereas an SVG rect needs to be drawn clockwise.
-            Path2D.Double p = new Path2D.Double();
-            double aw = roundrect.arcwidth / 2d;
-            double ah = roundrect.archeight / 2d;
-            p.moveTo((roundrect.x + aw), (float) roundrect.y);
-            p.lineTo((roundrect.x + roundrect.width - aw), (float) roundrect.y);
-            p.curveTo((roundrect.x + roundrect.width - aw * ACV), (float) roundrect.y,
-                    (roundrect.x + roundrect.width), (float) (roundrect.y + ah * ACV),
-                    (roundrect.x + roundrect.width), (roundrect.y + ah));
-            p.lineTo((roundrect.x + roundrect.width), (roundrect.y + roundrect.height - ah));
-            p.curveTo(
-                    (roundrect.x + roundrect.width), (roundrect.y + roundrect.height - ah * ACV),
-                    (roundrect.x + roundrect.width - aw * ACV), (roundrect.y + roundrect.height),
-                    (roundrect.x + roundrect.width - aw), (roundrect.y + roundrect.height));
-            p.lineTo((roundrect.x + aw), (roundrect.y + roundrect.height));
-            p.curveTo((roundrect.x + aw * ACV), (roundrect.y + roundrect.height),
-                    (roundrect.x), (roundrect.y + roundrect.height - ah * ACV),
-                    (float) roundrect.x, (roundrect.y + roundrect.height - ah));
-            p.lineTo((float) roundrect.x, (roundrect.y + ah));
-            p.curveTo((roundrect.x), (roundrect.y + ah * ACV),
-                    (roundrect.x + aw * ACV), (float) (roundrect.y),
-                    (float) (roundrect.x + aw), (float) (roundrect.y));
-            p.closePath();
-            g.draw(p);
+            Path2D.Double path = createRoundRectanglePath(roundrect);
+            g.draw(path);
         }
+    }
+
+    /**
+     * Creates a rounded rectangle path.
+     *
+     * @param roundrect the RoundRectangle2D object to create the path from
+     * @return the created rounded rectangle path
+     */
+    private Path2D.Double createRoundRectanglePath(RoundRectangle2D roundrect) {
+        Path2D.Double path = new Path2D.Double();
+        double aw = roundrect.getArcWidth() / 2d;
+        double ah = roundrect.getArcHeight() / 2d;
+
+        path.moveTo(roundrect.getX() + aw, roundrect.getY());
+
+        path.lineTo(roundrect.getX() + roundrect.getWidth() - aw, roundrect.getY());
+
+        path.curveTo(roundrect.getX() + roundrect.getWidth() - aw * ACV, roundrect.getY(),
+                roundrect.getX() + roundrect.getWidth(), roundrect.getY() + ah * ACV,
+                roundrect.getX() + roundrect.getWidth(), roundrect.getY() + ah);
+
+        path.lineTo(roundrect.getX() + roundrect.getWidth(), roundrect.getY() + roundrect.getHeight() - ah);
+
+        path.curveTo(roundrect.getX() + roundrect.getWidth(), roundrect.getY() + roundrect.getHeight() - ah * ACV,
+                roundrect.getX() + roundrect.getWidth() - aw * ACV, roundrect.getY() + roundrect.getHeight(),
+                roundrect.getX() + roundrect.getWidth() - aw, roundrect.getY() + roundrect.getHeight());
+
+        path.lineTo(roundrect.getX() + aw, roundrect.getY() + roundrect.getHeight());
+
+        path.curveTo(roundrect.getX() + aw * ACV, roundrect.getY() + roundrect.getHeight(),
+                roundrect.getX(), roundrect.getY() + roundrect.getHeight() - ah * ACV,
+                roundrect.getX(), roundrect.getY() + ah);
+
+        path.lineTo(roundrect.getX(), roundrect.getY() + ah);
+
+        path.curveTo(roundrect.getX(), roundrect.getY() + ah * ACV,
+                roundrect.getX() + aw * ACV, roundrect.getY(),
+                roundrect.getX() + aw, roundrect.getY());
+
+        path.closePath();
+
+        return path;
     }
 
     // SHAPE AND BOUNDS
