@@ -198,24 +198,32 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
 
     @Override
     public Rectangle2D.Double getDrawingArea() {
-        Rectangle2D rx = getTransformedShape().getBounds2D();
-        Rectangle2D.Double r = (rx instanceof Rectangle2D.Double) ? (Rectangle2D.Double) rx : new Rectangle2D.Double(rx.getX(), rx.getY(), rx.getWidth(), rx.getHeight());
+        Rectangle2D transformedBounds = getTransformedShape().getBounds2D();
+        Rectangle2D.Double drawingArea = (transformedBounds instanceof Rectangle2D.Double) ?
+                (Rectangle2D.Double) transformedBounds : new Rectangle2D.Double(transformedBounds.getX(),
+                transformedBounds.getY(),
+                transformedBounds.getWidth(),
+                transformedBounds.getHeight());
+
         if (get(TRANSFORM) == null) {
-            double g = SVGAttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1d;
-            Geom.grow(r, g, g);
+            double hitGrowth = SVGAttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1d;
+            Geom.grow(drawingArea, hitGrowth, hitGrowth);
         } else {
             double strokeTotalWidth = AttributeKeys.getStrokeTotalWidth(this, 1.0);
-            double width = strokeTotalWidth / 2d;
+            double halfWidth = strokeTotalWidth / 2d;
+
             if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
-                width *= get(STROKE_MITER_LIMIT);
+                halfWidth *= get(STROKE_MITER_LIMIT);
             }
+
             if (get(STROKE_CAP) != BasicStroke.CAP_BUTT) {
-                width += strokeTotalWidth * 2;
+                halfWidth += strokeTotalWidth * 2;
             }
-            width++;
-            Geom.grow(r, width, width);
+
+            halfWidth++;
+            Geom.grow(drawingArea, halfWidth, halfWidth);
         }
-        return r;
+        return drawingArea;
     }
 
     /**
