@@ -7,6 +7,7 @@
  */
 package org.jhotdraw.draw.tool;
 
+import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.Figure;
 import java.awt.*;
 import java.awt.event.*;
@@ -91,6 +92,7 @@ public class DelegationSelectionTool extends SelectionTool {
      * MouseListener method for mousePressed events. If the popup trigger has
      * been activated, then the appropriate hook method is called.
      */
+    @FeatureEntryPoint(value = "selection tool")
     @Override
     public void mousePressed(final MouseEvent evt) {
         if (popupTimer != null) {
@@ -122,6 +124,7 @@ public class DelegationSelectionTool extends SelectionTool {
      * MouseListener method for mouseReleased events. If the popup trigger has
      * been activated, then the appropriate hook method is called.
      */
+    @FeatureEntryPoint(value = "selection tool")
     @Override
     public void mouseReleased(MouseEvent evt) {
         if (popupTimer != null) {
@@ -138,7 +141,7 @@ public class DelegationSelectionTool extends SelectionTool {
             }
         }
     }
-
+    @FeatureEntryPoint(value = "selection tool")
     @Override
     public void mouseDragged(MouseEvent evt) {
         if (popupTimer != null) {
@@ -149,7 +152,7 @@ public class DelegationSelectionTool extends SelectionTool {
             super.mouseDragged(evt);
         }
     }
-
+    @FeatureEntryPoint(value = "selection tool")
     @Override
     public void mouseClicked(MouseEvent evt) {
         if (DEBUG) {
@@ -186,7 +189,7 @@ public class DelegationSelectionTool extends SelectionTool {
             popupMenu = null;
         }
     }
-
+    @FeatureEntryPoint(value = "selection tool")
     protected void showPopupMenu(Figure figure, Point p, Component c) {
         if (DEBUG) {
             System.out.println("DelegationSelectionTool.showPopupMenu " + figure);
@@ -261,6 +264,7 @@ public class DelegationSelectionTool extends SelectionTool {
      * Hook method which can be overriden by subclasses to provide
      * specialised behaviour in the event of a double click.
      */
+    @FeatureEntryPoint(value = "selection tool")
     protected void handleDoubleClick(MouseEvent evt) {
         if (DEBUG) {
             System.out.println("DelegationSelectionTool.handleDoubleClick " + evt);
