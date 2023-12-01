@@ -1183,6 +1183,8 @@ public class BezierPath extends ArrayList<BezierPath.Node>
                 case PathIterator.SEG_QUADTO:
                     quadTo(coords[0], coords[1], coords[2], coords[3]);
                     break;
+                    default:
+                    throw new InternalError("unrecognized path type");
             }
             i.next();
         }
