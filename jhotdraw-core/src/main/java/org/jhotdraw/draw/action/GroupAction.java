@@ -75,8 +75,6 @@ public class GroupAction extends AbstractSelectedAction {
                         prototype.getClass());
     }
 
-    @FeatureEntryPoint("GroupAction")
-
     @Override
     public void actionPerformed(java.awt.event.ActionEvent e) {
         if (isGroupingAction) {

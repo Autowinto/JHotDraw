@@ -36,8 +36,6 @@ public class JDisclosureToolBar extends JToolBar {
         initComponents();
     }
 
-    @FeatureEntryPoint("tools-display")
-
     private void initComponents() {
         GridBagConstraints gbc;
         AbstractButton btn;
