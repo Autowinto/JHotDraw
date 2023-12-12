@@ -206,6 +206,7 @@ public class SelectionTool extends AbstractTool {
         tracker.mouseExited(evt);
     }
 
+    @FeatureEntryPoint("Select")
     @Override
     public void mouseMoved(MouseEvent evt) {
         tracker.mouseMoved(evt);
@@ -218,13 +219,13 @@ public class SelectionTool extends AbstractTool {
         }
     }
 
+    @FeatureEntryPoint("Select")
     @Override
     public void draw(Graphics2D g) {
         tracker.draw(g);
     }
 
     @FeatureEntryPoint("Select")
-
     @Override
     public void mousePressed(MouseEvent evt) {
         if (getView() != null && getView().isEnabled()) {
