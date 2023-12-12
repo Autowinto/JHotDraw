@@ -20,7 +20,7 @@ public class SVGRectFigureTest {
         double height = 9.1;
         double rx = 1d;
         double ry = 1d;
-        rectFigure = new SVGRectFigure(x, y,width, height,rx, ry);
+        rectFigure = new SVGRectFigure(x, y, width, height, rx, ry);
 
     }
 
@@ -55,8 +55,8 @@ public class SVGRectFigureTest {
     @Test
     public void testDrawStroke() {
         // instance of variables for BufferedImage
-        double x = 3;
-        double height = 8;
+        int x = 3;
+        int height = 8;
 
         //Create a BufferedImage
         BufferedImage buf = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
@@ -65,19 +65,19 @@ public class SVGRectFigureTest {
         Graphics2D g = buf.createGraphics();
 
         //Check if the pixel color is white
-        Assert.assertEquals(0, buf.getRGB((int)x, (int)(height / 2)));
+        Assert.assertEquals(0, buf.getRGB(x, (height / 2)));
 
         //Set the pixel color to black
-        buf.setRGB((int)x, (int)(height / 2), Color.BLACK.getRGB());
+        buf.setRGB(x, (height / 2), Color.BLACK.getRGB());
 
         //Check if the pixel color is black
-        Assert.assertEquals(-16777216, buf.getRGB((int)x, (int)(height / 2)));
+        Assert.assertEquals(-16777216, buf.getRGB(x, (height / 2)));
 
         //Draw the stroke
         rectFigure.drawStroke(g);
 
         //Check if something was drawn and the pixel color has changed
-        assertNotEquals(0, buf.getRGB((int)x, (int)(height / 2)));
+        assertNotEquals(0, buf.getRGB(x, (height / 2)));
     }
 
 }
