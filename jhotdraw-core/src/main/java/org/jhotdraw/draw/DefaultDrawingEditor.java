@@ -7,6 +7,7 @@
  */
 package org.jhotdraw.draw;
 
+import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.Figure;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -52,6 +53,7 @@ public class DefaultDrawingEditor extends AbstractBean implements DrawingEditor 
 
     private class ToolHandler extends ToolAdapter {
 
+        @FeatureEntryPoint(value = "DefaultDrawingEditor")
         @Override
         public void areaInvalidated(ToolEvent evt) {
             Rectangle r = evt.getInvalidatedArea();
@@ -113,6 +115,7 @@ public class DefaultDrawingEditor extends AbstractBean implements DrawingEditor 
         actionMap = createActionMap();
     }
 
+    @FeatureEntryPoint(value = "DefaultDrawingEditor")
     @Override
     public void setTool(Tool newValue) {
         Tool oldValue = tool;
@@ -154,6 +157,7 @@ public class DefaultDrawingEditor extends AbstractBean implements DrawingEditor 
         firePropertyChange(ACTIVE_VIEW_PROPERTY, oldValue, newValue);
     }
 
+    @FeatureEntryPoint(value = "DefaultDrawingEditor")
     @Override
     public Tool getTool() {
         return tool;
