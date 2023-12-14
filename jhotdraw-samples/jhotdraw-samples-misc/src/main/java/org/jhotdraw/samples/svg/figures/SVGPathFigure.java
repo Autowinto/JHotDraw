@@ -15,7 +15,6 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.undo.*;
 
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.*;
 import static org.jhotdraw.draw.AttributeKeys.FILL_COLOR;
 import static org.jhotdraw.draw.AttributeKeys.PATH_CLOSED;
@@ -60,13 +59,11 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     /**
      * Creates a new instance.
      */
-    @FeatureEntryPoint(value = "path tool")
     public SVGPathFigure() {
         add(new SVGBezierFigure());
         SVGAttributeKeys.setDefaults(this);
     }
 
-    @FeatureEntryPoint(value = "path tool")
     public SVGPathFigure(boolean isEmpty) {
         if (!isEmpty) {
             add(new SVGBezierFigure());
@@ -75,7 +72,6 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         setConnectable(false);
     }
 
-    @FeatureEntryPoint(value = "path tool")
     @Override
     public void draw(Graphics2D g) {
         double opacity = get(OPACITY);
@@ -480,7 +476,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     /**
      * Handles a mouse click.
      */
-    @FeatureEntryPoint(value = "path tool")
+    
     @Override
     public boolean handleMouseClick(Point2D.Double p, MouseEvent evt, DrawingView view) {
         if (evt.getClickCount() == 2 && view.getHandleDetailLevel() % 2 == 0) {
