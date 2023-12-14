@@ -7,7 +7,6 @@
  */
 package org.jhotdraw.draw;
 
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.draw.figure.AbstractAttributedCompositeFigure;
 import java.awt.font.*;
@@ -38,9 +37,7 @@ public abstract class AbstractDrawing extends AbstractAttributedCompositeFigure 
     /**
      * Creates a new instance.
      */
-    @FeatureEntryPoint(value = "AbstractDrawing")
     public AbstractDrawing() {
-        System.out.println("AbstractDrawing");
     }
 
     @Override
