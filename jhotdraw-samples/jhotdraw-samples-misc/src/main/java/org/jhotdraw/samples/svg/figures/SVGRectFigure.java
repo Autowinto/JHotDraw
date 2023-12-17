@@ -339,7 +339,6 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     }
 
     // EDITING
-    @FeatureEntryPoint("rectangle tool - edit")
     @Override
     public Collection<Handle> createHandles(int detailLevel) {
         LinkedList<Handle> handles = new LinkedList<>();
