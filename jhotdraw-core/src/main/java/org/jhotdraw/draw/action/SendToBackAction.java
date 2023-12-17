@@ -36,8 +36,7 @@ public class SendToBackAction extends AbstractSelectedAction {
         updateEnabledState();
     }
 
-    @FeatureEntryPoint("SendToBack")
-
+    @FeatureEntryPoint("arrange - sendToBack")
     @Override
     public void actionPerformed(java.awt.event.ActionEvent e) {
         final DrawingView view = getView();

@@ -61,6 +61,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     }
     /**
      */
+
     private RoundRectangle2D.Double roundrect;
     /**
      * This is used to perform faster drawing.
@@ -74,6 +75,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     /**
      * Creates a new instance.
      */
+
     public SVGRectFigure() {
         this(0, 0, 0, 0);
     }
@@ -81,8 +83,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     public SVGRectFigure(double x, double y, double width, double height) {
         this(x, y, width, height, 0, 0);
     }
-
-    @FeatureEntryPoint(value = "rectangle tool")
+    @FeatureEntryPoint("rectangle tool - draw")
     public SVGRectFigure(double x, double y, double width, double height, double rx, double ry) {
         roundrect = new RoundRectangle2D.Double(x, y, width, height, rx, ry);
         SVGAttributeKeys.setDefaults(this);
@@ -99,15 +100,9 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         }
     }
 
-    /**
-     * Draws the stroke of the round rectangle.
-     *
-     * @param g the Graphics2D object to draw on
-     */
-    @FeatureEntryPoint(value = "rectangle tool")
     @Override
     protected void drawStroke(Graphics2D g) {
-        if (roundrect.arcwidth == 0 && roundrect.archeight == 0) {
+        if (roundrect.archeight == 0 && roundrect.arcwidth == 0) {
             g.draw(roundrect.getBounds2D());
         } else {
             Path2D.Double path = createRoundRectanglePath(roundrect);

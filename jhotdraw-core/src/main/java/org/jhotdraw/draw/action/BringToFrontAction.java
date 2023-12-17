@@ -36,8 +36,7 @@ public class BringToFrontAction extends AbstractSelectedAction {
         updateEnabledState();
     }
 
-    @FeatureEntryPoint("BringToFront")
-
+    @FeatureEntryPoint("arrange - bringToFront")
     @Override
     public void actionPerformed(java.awt.event.ActionEvent e) {
         final DrawingView view = getView();

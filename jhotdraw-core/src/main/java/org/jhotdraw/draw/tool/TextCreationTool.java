@@ -7,6 +7,7 @@
  */
 package org.jhotdraw.draw.tool;
 
+import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.draw.figure.TextHolderFigure;
 import java.awt.*;
@@ -65,6 +66,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     /**
      * Creates a new instance.
      */
+    @FeatureEntryPoint("Text tool - Create")
     public TextCreationTool(TextHolderFigure prototype) {
         super(prototype);
     }
@@ -72,10 +74,12 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     /**
      * Creates a new instance.
      */
+    @FeatureEntryPoint("Text tool - Create")
     public TextCreationTool(TextHolderFigure prototype, Map<AttributeKey<?>, Object> attributes) {
         super(prototype, attributes);
     }
 
+    @FeatureEntryPoint("Text tool - Create")
     @Override
     public void deactivate(DrawingEditor editor) {
         endEdit();
@@ -85,6 +89,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     /**
      * Creates a new figure at the location where the mouse was pressed.
      */
+    @FeatureEntryPoint("Text tool - Create")
     @Override
     public void mousePressed(MouseEvent e) {
         // Note: The search sequence used here, must be
@@ -111,6 +116,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     public void mouseDragged(java.awt.event.MouseEvent e) {
     }
 
+    @FeatureEntryPoint("Text tool - Create")
     protected void beginEdit(TextHolderFigure textHolder) {
         if (textField == null) {
             textField = new FloatingTextField();
@@ -128,6 +134,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     public void mouseReleased(MouseEvent evt) {
     }
 
+    @FeatureEntryPoint("Text tool - Create")
     protected void endEdit() {
         if (typingTarget != null) {
             typingTarget.willChange();
