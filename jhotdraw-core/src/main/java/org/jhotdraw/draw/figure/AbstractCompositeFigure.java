@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import javax.swing.event.*;
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.AttributeKey;
 import org.jhotdraw.draw.Drawing;
 import static org.jhotdraw.draw.AttributeKeys.*;
@@ -56,7 +55,8 @@ public abstract class AbstractCompositeFigure
      */
     protected ArrayList<Figure> children = new ArrayList<>();
     /**
-     * Caches the drawing area to improve the performance of method {@link #getDrawingArea}.
+     * Caches the drawing area to improve the performance of method
+     * {@link #getDrawingArea}.
      */
     protected transient Rectangle2D.Double cachedDrawingArea;
     /**
@@ -298,7 +298,7 @@ public abstract class AbstractCompositeFigure
             f.transform(tx);
         }
         invalidate();
-        //invalidate();
+        // invalidate();
     }
 
     @Override
@@ -453,8 +453,8 @@ public abstract class AbstractCompositeFigure
     @Override
     public void layout() {
         // Note: We increase and below decrease the changing depth here,
-        //       because we want to ignore change events from our children
-        //       why we lay them out.
+        // because we want to ignore change events from our children
+        // why we lay them out.
         changingDepth++;
         for (Figure child : getChildren()) {
             if (child instanceof CompositeFigure) {

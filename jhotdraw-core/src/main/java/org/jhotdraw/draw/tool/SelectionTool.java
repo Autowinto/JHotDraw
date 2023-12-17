@@ -7,7 +7,6 @@
  */
 package org.jhotdraw.draw.tool;
 
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.Figure;
 import java.awt.*;
 import java.awt.event.*;
@@ -24,7 +23,8 @@ import org.jhotdraw.draw.handle.Handle;
  * A selection tool is in one of three states: 1) area
  * selection, 2) figure dragging, 3) handle manipulation. The different
  * states are handled by different tracker objects: the
- * <code>DefaultSelectAreaTracker</code>, the <code>DefaultDragTracker</code> and the
+ * <code>DefaultSelectAreaTracker</code>, the <code>DefaultDragTracker</code>
+ * and the
  * <code>DefaultHandleTracker</code>.
  * <p>
  * A Figure can be selected by clicking at it. Holding the alt key or the
@@ -105,6 +105,7 @@ public class SelectionTool extends AbstractTool {
             fireBoundsInvalidated(e.getInvalidatedArea());
         }
     }
+
     private TrackerHandler trackerHandler;
     /**
      * Constant for the name of the selectBehindEnabled property.
@@ -223,7 +224,6 @@ public class SelectionTool extends AbstractTool {
         tracker.draw(g);
     }
 
-
     @Override
     public void mousePressed(MouseEvent evt) {
         if (getView() != null && getView().isEnabled()) {
@@ -239,7 +239,7 @@ public class SelectionTool extends AbstractTool {
                 Point2D.Double p = view.viewToDrawing(anchor);
                 if (isSelectBehindEnabled()
                         && (evt.getModifiersEx()
-                        & (InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK)) != 0) {
+                                & (InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK)) != 0) {
                     // Select a figure behind the current selection
                     figure = view.findFigure(anchor);
                     while (figure != null && !figure.isSelectable()) {
@@ -255,7 +255,8 @@ public class SelectionTool extends AbstractTool {
                 } else {
                     // Note: The search sequence used here, must be
                     // consistent with the search sequence used by the
-                    // DefaultHandleTracker, the DefaultSelectAreaTracker and DelegationSelectionTool.
+                    // DefaultHandleTracker, the DefaultSelectAreaTracker and
+                    // DelegationSelectionTool.
                     // If possible, continue to work with the current selection
                     figure = null;
                     if (isSelectBehindEnabled()) {
