@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import static org.jhotdraw.draw.AttributeKeys.*;
-
 import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.geom.Geom;
 import org.jhotdraw.util.ReversedList;
@@ -49,7 +48,6 @@ public class DefaultDrawing
     /**
      * Creates a new instance.
      */
-    
     public DefaultDrawing() {
     }
 
@@ -58,8 +56,6 @@ public class DefaultDrawing
         super.basicAdd(index, figure);
         invalidateSortOrder();
     }
-
-    
     @Override
     public void draw(Graphics2D g) {
         synchronized (getLock()) {
@@ -75,8 +71,6 @@ public class DefaultDrawing
             draw(g, toDraw);
         }
     }
-
-    
     public void draw(Graphics2D g, Collection<Figure> children) {
         Rectangle2D clipBounds = g.getClipBounds();
         double scale = AttributeKeys.getScaleFactorFromGraphics(g);
@@ -94,8 +88,6 @@ public class DefaultDrawing
             }
         }
     }
-
-    
     @Override
     public List<Figure> sort(Collection<? extends Figure> c) {
         Set<Figure> unsorted = new HashSet<>();
@@ -215,7 +207,6 @@ public class DefaultDrawing
      * Returns an iterator to iterate in Z-order front to back over the
      * children.
      */
-    
     @Override
     public List<Figure> getFiguresFrontToBack() {
         ensureSorted();
