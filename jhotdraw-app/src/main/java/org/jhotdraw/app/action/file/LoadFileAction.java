@@ -19,7 +19,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.api.app.Application;
 import org.jhotdraw.api.app.View;
 import org.jhotdraw.api.gui.URIChooser;
@@ -61,7 +60,8 @@ import org.jhotdraw.util.ResourceBundleUtil;
  *
  * <p>
  * <em>Allow multiple views per URI</em><br>
- * When the feature is disabled, {@code LoadFileAction} prevents exporting to an URI which
+ * When the feature is disabled, {@code LoadFileAction} prevents exporting to an
+ * URI which
  * is opened in another view.<br>
  * See {@link org.jhotdraw.app} for a description of the feature.
  * </p>
@@ -78,7 +78,6 @@ public class LoadFileAction extends AbstractSaveUnsavedChangesAction {
      * Creates a new instance.
      */
 
-    @FeatureEntryPoint("Loading File Formats - LoadFileAction - Constructor")
     public LoadFileAction(Application app, View view) {
         super(app, view);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
@@ -94,7 +93,6 @@ public class LoadFileAction extends AbstractSaveUnsavedChangesAction {
         }
         return chsr;
     }
-
 
     @Override
     public void doIt(final View view) {
@@ -154,15 +152,16 @@ public class LoadFileAction extends AbstractSaveUnsavedChangesAction {
                 ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
                 JSheet.showMessageSheet(view.getComponent(),
                         "<html>" + UIManager.getString("OptionPane.css")
-                        + "<b>" + labels.getFormatted("file.load.couldntLoad.message", URIUtil.getName(uri)) + "</b><p>"
-                        + ((value == null) ? "" : value),
+                                + "<b>" + labels.getFormatted("file.load.couldntLoad.message", URIUtil.getName(uri))
+                                + "</b><p>"
+                                + ((value == null) ? "" : value),
                         JOptionPane.ERROR_MESSAGE, new SheetListener() {
-                    @Override
-                    public void optionSelected(SheetEvent evt) {
-                        view.clear();
-                        view.setEnabled(true);
-                    }
-                });
+                            @Override
+                            public void optionSelected(SheetEvent evt) {
+                                view.clear();
+                                view.setEnabled(true);
+                            }
+                        });
             }
         }.execute();
     }
