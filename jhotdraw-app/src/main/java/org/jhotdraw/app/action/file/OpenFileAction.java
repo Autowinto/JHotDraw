@@ -29,6 +29,8 @@ import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
+
+import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.action.AbstractApplicationAction;
 import org.jhotdraw.api.app.Application;
 import org.jhotdraw.api.app.View;
@@ -52,7 +54,8 @@ import org.jhotdraw.util.prefs.PreferencesUtil;
  * <p>
  * This action is designed for applications which automatically
  * create a new view for each opened file. This action goes together with
- * {@link NewFileAction}, {@link OpenDirectoryAction} and {@link CloseFileAction}.
+ * {@link NewFileAction}, {@link OpenDirectoryAction} and
+ * {@link CloseFileAction}.
  * This action should not be used together with {@link LoadFileAction}.
  * <hr>
  * <b>Features</b>
@@ -82,6 +85,7 @@ public class OpenFileAction extends AbstractApplicationAction {
     /**
      * Creates a new instance.
      */
+    @FeatureEntryPoint("OVF")
     public OpenFileAction(Application app) {
         super(app);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
@@ -93,6 +97,7 @@ public class OpenFileAction extends AbstractApplicationAction {
         return getApplication().getOpenChooser(null);
     }
 
+    @FeatureEntryPoint("OVF")
     @Override
     public void actionPerformed(ActionEvent evt) {
         final Application app = getApplication();
@@ -143,6 +148,7 @@ public class OpenFileAction extends AbstractApplicationAction {
         }
     }
 
+    @FeatureEntryPoint("OVF")
     protected void openViewFromURI(final View view, final URI uri, final URIChooser chooser) {
         final Application app = getApplication();
         app.setEnabled(true);
@@ -172,7 +178,8 @@ public class OpenFileAction extends AbstractApplicationAction {
                     view.read(uri, chooser);
                 } else {
                     ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
-                    throw new IOException(labels.getFormatted("file.open.fileDoesNotExist.message", URIUtil.getName(uri)));
+                    throw new IOException(
+                            labels.getFormatted("file.open.fileDoesNotExist.message", URIUtil.getName(uri)));
                 }
                 return null;
             }
@@ -206,8 +213,9 @@ public class OpenFileAction extends AbstractApplicationAction {
                 ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
                 JSheet.showMessageSheet(view.getComponent(),
                         "<html>" + UIManager.getString("OptionPane.css")
-                        + "<b>" + labels.getFormatted("file.open.couldntOpen.message", URIUtil.getName(uri)) + "</b><p>"
-                        + ((message == null) ? "" : message),
+                                + "<b>" + labels.getFormatted("file.open.couldntOpen.message", URIUtil.getName(uri))
+                                + "</b><p>"
+                                + ((message == null) ? "" : message),
                         JOptionPane.ERROR_MESSAGE);
             }
         }.execute();
@@ -217,6 +225,7 @@ public class OpenFileAction extends AbstractApplicationAction {
      * We implement JFileChooser.showDialog by ourselves, so that we can center
      * dialogs properly on screen on Mac OS X.
      */
+    @FeatureEntryPoint("OVF")
     public int showDialog(URIChooser chooser, Component parent) {
         final Component finalParent = parent;
         final int[] returnValue = new int[1];
@@ -242,7 +251,8 @@ public class OpenFileAction extends AbstractApplicationAction {
         returnValue[0] = JFileChooser.ERROR_OPTION;
         chooser.rescanCurrentDirectory();
         dialog.setVisible(true);
-        //chooser.firePropertyChange("JFileChooserDialogIsClosingProperty", dialog, null);
+        // chooser.firePropertyChange("JFileChooserDialogIsClosingProperty", dialog,
+        // null);
         dialog.removeAll();
         dialog.dispose();
         return returnValue[0];
@@ -252,36 +262,39 @@ public class OpenFileAction extends AbstractApplicationAction {
      * We implement JFileChooser.showDialog by ourselves, so that we can center
      * dialogs properly on screen on Mac OS X.
      */
+    @FeatureEntryPoint("OVF")
     protected JDialog createDialog(URIChooser chooser, Component parent) throws HeadlessException {
         String title = chooser.getDialogTitle();
         if (chooser instanceof JFileChooser) {
             ((JFileChooser) chooser).getAccessibleContext().setAccessibleDescription(title);
         }
         JDialog dialog;
-        Window window = (parent == null || (parent instanceof Window)) ? (Window) parent : SwingUtilities.getWindowAncestor(parent);
+        Window window = (parent == null || (parent instanceof Window)) ? (Window) parent
+                : SwingUtilities.getWindowAncestor(parent);
         dialog = new JDialog(window, title, Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setComponentOrientation(chooser.getComponent().getComponentOrientation());
         Container contentPane = dialog.getContentPane();
         contentPane.setLayout(new BorderLayout());
         contentPane.add(chooser.getComponent(), BorderLayout.CENTER);
         if (JDialog.isDefaultLookAndFeelDecorated()) {
-            boolean supportsWindowDecorations
-                    = UIManager.getLookAndFeel().getSupportsWindowDecorations();
+            boolean supportsWindowDecorations = UIManager.getLookAndFeel().getSupportsWindowDecorations();
             if (supportsWindowDecorations) {
                 dialog.getRootPane().setWindowDecorationStyle(JRootPane.FILE_CHOOSER_DIALOG);
             }
         }
-        //dialog.pack();
+        // dialog.pack();
         Preferences prefs = PreferencesUtil.userNodeForPackage(getApplication().getModel().getClass());
         PreferencesUtil.installFramePrefsHandler(prefs, "openChooser", dialog);
         /*
-        if (window.getBounds().isEmpty()) {
-        Rectangle screenBounds = window.getGraphicsConfiguration().getBounds();
-        dialog.setLocation(screenBounds.x + (screenBounds.width - dialog.getWidth()) / 2,
-        screenBounds.y + (screenBounds.height - dialog.getHeight()) / 3);
-        } else {
-        dialog.setLocationRelativeTo(parent);
-        }*/
+         * if (window.getBounds().isEmpty()) {
+         * Rectangle screenBounds = window.getGraphicsConfiguration().getBounds();
+         * dialog.setLocation(screenBounds.x + (screenBounds.width - dialog.getWidth())
+         * / 2,
+         * screenBounds.y + (screenBounds.height - dialog.getHeight()) / 3);
+         * } else {
+         * dialog.setLocationRelativeTo(parent);
+         * }
+         */
         return dialog;
     }
 }
