@@ -9,14 +9,18 @@ package org.jhotdraw.gui.plaf.palette;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.MouseInputListener;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.ToolBarUI;
+import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import javax.swing.plaf.*;
 
 /**
  * ToolBarUI for palette components.
@@ -37,14 +41,14 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
 
     private static final boolean IS_FLOATING_ALLOWED = false;
 
-    protected JToolBar toolBar;
+    public JToolBar toolBar;
     private boolean floating;
-    private int floatingX;
-    private int floatingY;
+    public int floatingX;
+    public int floatingY;
     private JFrame floatingFrame;
     private RootPaneContainer floatingToolBar;
-    protected DragWindow dragWindow;
-    private Container dockingSource;
+    public DragWindow dragWindow;
+    public Container dockingSource;
     private int dockingSensitivity = 0;
     protected int focusedCompIndex = -1;
     protected Color dockingColor = null;
@@ -712,12 +716,12 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
         }
     }
 
-    private void setFloatingLocation(int x, int y) {
+    public void setFloatingLocation(int x, int y) {
         floatingX = x;
         floatingY = y;
     }
 
-    protected void floatAt(Point position, Point origin) {
+    public void floatAt(Point position, Point origin) {
         if (!toolBar.isFloatable()) {
             return;
         }
@@ -1405,7 +1409,7 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
         }
     }
 
-    protected class DragWindow extends JWindow {
+    public class DragWindow extends JWindow {
 
         private static final long serialVersionUID = 1L;
         Color borderColor = Color.gray;

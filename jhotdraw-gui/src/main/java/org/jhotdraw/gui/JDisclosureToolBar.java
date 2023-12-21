@@ -24,7 +24,7 @@ import org.jhotdraw.gui.plaf.palette.PaletteToolBarUI;
 public class JDisclosureToolBar extends JToolBar {
 
     private static final long serialVersionUID = 1L;
-    private JButton disclosureButton;
+    JButton disclosureButton;
     public static final String DISCLOSURE_STATE_PROPERTY = "disclosureState";
     public static final String DISCLOSURE_STATE_COUNT_PROPERTY = "disclosureStateCount";
 
