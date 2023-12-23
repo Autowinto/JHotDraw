@@ -4,8 +4,8 @@
   "scenarios": [
     {
       "className": "org.jhotdraw.gui.BDD.DragAndDrop.ToolPaletteTestDragAndDrop",
-      "testMethodName": "Scenario_toolbar_can_be_dragged_from_theTool_palette_bar_by_the_user",
-      "description": "Scenario toolbar can be dragged from theTool palette bar by the user",
+      "testMethodName": "Scenario_Toolbar_can_be_dragged_from_theTool_palette_bar_by_the_user",
+      "description": "Scenario Toolbar can be dragged from theTool palette bar by the user",
       "tagIds": [],
       "explicitParameters": [],
       "derivedParameters": [],
@@ -25,7 +25,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 99896200,
+              "durationInNanos": 105419800,
               "depth": 0,
               "parentFailed": false
             },
@@ -41,7 +41,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 65000,
+              "durationInNanos": 206400,
               "depth": 0,
               "parentFailed": false
             },
@@ -57,7 +57,7 @@
                 }
               ],
               "status": "PASSED",
-              "durationInNanos": 75201,
+              "durationInNanos": 98400,
               "depth": 0,
               "parentFailed": false
             }
@@ -65,11 +65,11 @@
           "explicitArguments": [],
           "derivedArguments": [],
           "status": "SUCCESS",
-          "durationInNanos": 114235899
+          "durationInNanos": 122524300
         }
       ],
       "casesAsTable": false,
-      "durationInNanos": 114235899
+      "durationInNanos": 122524300
     }
   ],
   "tagMap": {}
