@@ -1,0 +1,76 @@
+{
+  "className": "org.jhotdraw.gui.BDD.DragAndDrop.ToolPaletteTestDragAndDrop",
+  "name": "Tool Palette Test Drag And Drop",
+  "scenarios": [
+    {
+      "className": "org.jhotdraw.gui.BDD.DragAndDrop.ToolPaletteTestDragAndDrop",
+      "testMethodName": "Scenario_toolbar_can_be_dragged_from_theTool_palette_bar_by_the_user",
+      "description": "Scenario toolbar can be dragged from theTool palette bar by the user",
+      "tagIds": [],
+      "explicitParameters": [],
+      "derivedParameters": [],
+      "scenarioCases": [
+        {
+          "caseNr": 1,
+          "steps": [
+            {
+              "name": "the tool palette is visible and can be interacted with",
+              "words": [
+                {
+                  "value": "Given",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "the tool palette is visible and can be interacted with"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 99896200,
+              "depth": 0,
+              "parentFailed": false
+            },
+            {
+              "name": "the user wants to change the position of a tool",
+              "words": [
+                {
+                  "value": "When",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "the user wants to change the position of a tool"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 65000,
+              "depth": 0,
+              "parentFailed": false
+            },
+            {
+              "name": "the toolbar is placed according to user preference",
+              "words": [
+                {
+                  "value": "Then",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "the toolbar is placed according to user preference"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 75201,
+              "depth": 0,
+              "parentFailed": false
+            }
+          ],
+          "explicitArguments": [],
+          "derivedArguments": [],
+          "status": "SUCCESS",
+          "durationInNanos": 114235899
+        }
+      ],
+      "casesAsTable": false,
+      "durationInNanos": 114235899
+    }
+  ],
+  "tagMap": {}
+}

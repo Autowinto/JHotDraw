@@ -815,12 +815,6 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
         }
     }
 
-
-    /**
-     * Refactored
-     *
-     */
-
     private void updateDockingSource() {
         if (dockingSource == null) {
             dockingSource = toolBar.getParent();
