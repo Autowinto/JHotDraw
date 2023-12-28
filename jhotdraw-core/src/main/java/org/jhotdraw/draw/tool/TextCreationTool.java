@@ -8,22 +8,16 @@
 package org.jhotdraw.draw.tool;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-//import org.jhotdraw.draw.figure.Figure;
-//import org.jhotdraw.draw.figure.Figure;
+import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.draw.figure.TextHolderFigure;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-//import javax.swing.undo.AbstractUndoableEdit;
-//import javax.swing.undo.UndoableEdit;
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.UndoableEdit;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.text.*;
-//import org.jhotdraw.util.ResourceBundleUtil;
-
-//import javax.swing.undo.AbstractUndoableEdit;
-//import javax.swing.undo.UndoableEdit;
-//import org.jhotdraw.util.ResourceBundleUtil;
-//import org.w3c.dom.Text;
+import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
  * A tool to create figures which implement the {@code TextHolderFigure}
@@ -63,7 +57,7 @@ import org.jhotdraw.draw.text.*;
  * @author Werner Randelshofer
  * @version $Id$
  */
-public class TextCreationTool extends TextTool implements ActionListener {
+public class TextCreationTool extends CreationTool implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private FloatingTextField textField;
@@ -84,10 +78,17 @@ public class TextCreationTool extends TextTool implements ActionListener {
     public TextCreationTool(TextHolderFigure prototype, Map<AttributeKey<?>, Object> attributes) {
         super(prototype, attributes);
     }
+
+    @FeatureEntryPoint("Text tool - Create")
+    @Override
+    public void deactivate(DrawingEditor editor) {
+        endEdit();
+        super.deactivate(editor);
+    }
+
     /**
      * Creates a new figure at the location where the mouse was pressed.
      */
-/*
     @FeatureEntryPoint("Text tool - Create")
     @Override
     public void mousePressed(MouseEvent e) {
@@ -134,7 +135,6 @@ public class TextCreationTool extends TextTool implements ActionListener {
     }
 
     @FeatureEntryPoint("Text tool - Create")
-    /*
     protected void endEdit() {
         if (typingTarget != null) {
             typingTarget.willChange();
@@ -183,8 +183,8 @@ public class TextCreationTool extends TextTool implements ActionListener {
             textField.endOverlay();
         }
         //         view().checkDamage();
-    }*/
-/*
+    }
+
     @Override
     public void keyReleased(KeyEvent evt) {
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE || isToolDoneAfterCreation()) {
@@ -206,6 +206,10 @@ public class TextCreationTool extends TextTool implements ActionListener {
         updateCursor(getView(), new Point(0, 0));
     }
 
+    public boolean isEditing() {
+        return typingTarget != null;
+    }
+
     @Override
     public void updateCursor(DrawingView view, Point p) {
         if (view.isEnabled()) {
@@ -214,6 +218,4 @@ public class TextCreationTool extends TextTool implements ActionListener {
             view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
     }
-
- */
 }
