@@ -22,7 +22,6 @@ import org.jhotdraw.util.ResourceBundleUtil;
  */
 public class SendToBackAction extends AbstractSelectedAction {
 
-    private static final long serialVersionUID = 1L;
     public static final String ID = "edit.sendToBack";
 
     /**
