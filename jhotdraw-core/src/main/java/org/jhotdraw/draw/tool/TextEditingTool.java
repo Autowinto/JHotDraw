@@ -45,7 +45,7 @@ import org.jhotdraw.util.ResourceBundleUtil;
  * @author Werner Randelshofer
  * @version $Id$
  */
-public class TextEditingTool extends AbstractTool implements ActionListener {
+public class TextEditingTool extends TextTool implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private FloatingTextField textField;
@@ -56,6 +56,7 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
      */
     @FeatureEntryPoint("Text tool - Edit")
     public TextEditingTool(TextHolderFigure typingTarget) {
+        super(typingTarget);
         this.typingTarget = typingTarget;
     }
 
@@ -76,24 +77,6 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
             beginEdit(typingTarget);
             updateCursor(getView(), e.getPoint());
         }
-    }
-
-    @FeatureEntryPoint("Text tool - Edit")
-    protected void beginEdit(TextHolderFigure textHolder) {
-        if (textField == null) {
-            textField = new FloatingTextField();
-            textField.addActionListener(this);
-        }
-        if (textHolder != typingTarget && typingTarget != null) {
-            endEdit();
-        }
-        textField.createOverlay(getView(), textHolder);
-        textField.requestFocus();
-        typingTarget = textHolder;
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent evt) {
     }
 
     //Override willChange
@@ -153,10 +136,6 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         endEdit();
         fireToolDone();
-    }
-
-    public boolean isEditing() {
-        return typingTarget != null;
     }
 
     @Override
