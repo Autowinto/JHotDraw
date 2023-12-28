@@ -30,7 +30,6 @@ public class JDisclosureToolBar extends JToolBar {
     /**
      * Creates new form.
      */
-    @FeatureEntryPoint("tool palette - tools display")
     public JDisclosureToolBar() {
         setUI(PaletteToolBarUI.createUI(this));
         initComponents();

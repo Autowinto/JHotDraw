@@ -1075,7 +1075,6 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
             }
         }
 
-        @FeatureEntryPoint("tool palette - mouse released")
         @Override
         public void mouseReleased(MouseEvent evt) {
             if (!tb.isEnabled()) {
