@@ -85,121 +85,121 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     }
     @FeatureEntryPoint("rectangle tool - draw")
     public SVGRectFigure(double x, double y, double width, double height, double rx, double ry) {
-        roundrect = new RoundRectangle2D.Double(x, y, width, height, rx, ry);
+        rectangleShape  = new SVGRectangleShape(x, y, width, height, rx, ry);
         SVGAttributeKeys.setDefaults(this);
         setConnectable(false);
     }
-
     // DRAWING
     @Override
     protected void drawFill(Graphics2D g) {
-        if (getArcHeight() == 0d && getArcWidth() == 0d) {
-            g.fill(roundrect.getBounds2D());
+        // Use properties from the RectangleShape instance
+        double arcWidth = rectangleShape.getArcWidth();
+        double arcHeight = rectangleShape.getArcHeight();
+        double x = rectangleShape.getX();
+        double y = rectangleShape.getY();
+        double width = rectangleShape.getWidth();
+        double height = rectangleShape.getHeight();
+
+        // Create a RoundRectangle2D for drawing
+        RoundRectangle2D.Double shape = new RoundRectangle2D.Double(x, y, width, height, arcWidth, arcHeight);
+
+        // Draw the shape
+        if (arcHeight == 0d && arcWidth == 0d) {
+            g.fill(shape.getBounds2D());
         } else {
-            g.fill(roundrect);
+            g.fill(shape);
         }
     }
 
     @Override
     protected void drawStroke(Graphics2D g) {
-        if (roundrect.archeight == 0 && roundrect.arcwidth == 0) {
-            g.draw(roundrect.getBounds2D());
+        // Use properties from the RectangleShape instance
+        double arcWidth = rectangleShape.getArcWidth();
+        double arcHeight = rectangleShape.getArcHeight();
+        double x = rectangleShape.getX();
+        double y = rectangleShape.getY();
+        double width = rectangleShape.getWidth();
+        double height = rectangleShape.getHeight();
+
+        if (arcHeight == 0 && arcWidth == 0) {
+            g.draw(new Rectangle2D.Double(x, y, width, height));
         } else {
-            Path2D.Double path = createRoundRectanglePath(roundrect);
-            g.draw(path);
+            // We have to generate the path for the round rectangle manually,
+            // because the path of a Java RoundRectangle is drawn counter clockwise
+            // whereas an SVG rect needs to be drawn clockwise.
+            Path2D.Double p = new Path2D.Double();
+            double aw = arcWidth / 2d;
+            double ah = arcHeight / 2d;
+            p.moveTo((x + aw), y);
+            p.lineTo((x + width - aw), y);
+            p.curveTo((x + width - aw * ACV), y,
+                    (x + width), (y + ah * ACV),
+                    (x + width), (y + ah));
+            p.lineTo((x + width), (y + height - ah));
+            p.curveTo(
+                    (x + width), (y + height - ah * ACV),
+                    (x + width - aw * ACV), (y + height),
+                    (x + width - aw), (y + height));
+            p.lineTo((x + aw), (y + height));
+            p.curveTo((x + aw * ACV), (y + height),
+                    x, (y + height - ah * ACV),
+                    x, (y + height - ah));
+            p.lineTo(x, (y + ah));
+            p.curveTo(x, (y + ah * ACV),
+                    (x + aw * ACV), y,
+                    (x + aw), y);
+            p.closePath();
+            g.draw(p);
         }
     }
 
-    /**
-     * Creates a rounded rectangle path.
-     *
-     * @param roundrect the RoundRectangle2D object to create the path from
-     * @return the created rounded rectangle path
-     */
-    private Path2D.Double createRoundRectanglePath(RoundRectangle2D roundrect) {
-        Path2D.Double path = new Path2D.Double();
-        double aw = roundrect.getArcWidth() / 2d;
-        double ah = roundrect.getArcHeight() / 2d;
 
-        path.moveTo(roundrect.getX() + aw, roundrect.getY());
-
-        path.lineTo(roundrect.getX() + roundrect.getWidth() - aw, roundrect.getY());
-
-        path.curveTo(roundrect.getX() + roundrect.getWidth() - aw * ACV, roundrect.getY(),
-                roundrect.getX() + roundrect.getWidth(), roundrect.getY() + ah * ACV,
-                roundrect.getX() + roundrect.getWidth(), roundrect.getY() + ah);
-
-        path.lineTo(roundrect.getX() + roundrect.getWidth(), roundrect.getY() + roundrect.getHeight() - ah);
-
-        path.curveTo(roundrect.getX() + roundrect.getWidth(), roundrect.getY() + roundrect.getHeight() - ah * ACV,
-                roundrect.getX() + roundrect.getWidth() - aw * ACV, roundrect.getY() + roundrect.getHeight(),
-                roundrect.getX() + roundrect.getWidth() - aw, roundrect.getY() + roundrect.getHeight());
-
-        path.lineTo(roundrect.getX() + aw, roundrect.getY() + roundrect.getHeight());
-
-        path.curveTo(roundrect.getX() + aw * ACV, roundrect.getY() + roundrect.getHeight(),
-                roundrect.getX(), roundrect.getY() + roundrect.getHeight() - ah * ACV,
-                roundrect.getX(), roundrect.getY() + ah);
-
-        path.lineTo(roundrect.getX(), roundrect.getY() + ah);
-
-        path.curveTo(roundrect.getX(), roundrect.getY() + ah * ACV,
-                roundrect.getX() + aw * ACV, roundrect.getY(),
-                roundrect.getX() + aw, roundrect.getY());
-
-        path.closePath();
-
-        return path;
+    private RoundRectangle2D.Double getRoundRectangle2DDouble() {
+        return new RoundRectangle2D.Double(
+                rectangleShape.getX(), rectangleShape.getY(),
+                rectangleShape.getWidth(), rectangleShape.getHeight(),
+                rectangleShape.getArcWidth(), rectangleShape.getArcHeight()
+        );
     }
 
     // SHAPE AND BOUNDS
+    // Delegate methods to rectangleShape
     public double getX() {
-        return roundrect.x;
+        return rectangleShape.getX();
     }
 
     public double getY() {
-        return roundrect.y;
+        return rectangleShape.getY();
     }
 
     public double getWidth() {
-        return roundrect.width;
+        return rectangleShape.getWidth();
     }
 
     public double getHeight() {
-        return roundrect.height;
+        return rectangleShape.getHeight();
     }
 
-    /**
-     * Gets the arc width.
-     */
     public double getArcWidth() {
-        return roundrect.arcwidth;
+        return rectangleShape.getArcWidth();
     }
 
-    /**
-     * Gets the arc height.
-     */
     public double getArcHeight() {
-        return roundrect.archeight;
+        return rectangleShape.getArcHeight();
     }
 
-    /**
-     * Sets the arc width.
-     */
     public void setArcWidth(double newValue) {
-        double oldValue = roundrect.arcwidth;
-        roundrect.arcwidth = newValue;
+        double oldValue = getArcWidth();
+        rectangleShape.setArcWidth(newValue);
         firePropertyChange(ARC_WIDTH_PROPERTY, oldValue, newValue);
     }
 
-    /**
-     * Sets the arc height.
-     */
     public void setArcHeight(double newValue) {
-        double oldValue = roundrect.archeight;
-        roundrect.archeight = newValue;
+        double oldValue = getArcHeight();
+        rectangleShape.setArcHeight(newValue);
         firePropertyChange(ARC_HEIGHT_PROPERTY, oldValue, newValue);
     }
+
 
     /**
      * Convenience method for setting both the arc width and the arc height.
@@ -211,37 +211,36 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
 
     @Override
     public Rectangle2D.Double getBounds() {
-        return (Rectangle2D.Double) roundrect.getBounds2D();
+        // Use properties from the RectangleShape instance
+        double x = rectangleShape.getX();
+        double y = rectangleShape.getY();
+        double width = rectangleShape.getWidth();
+        double height = rectangleShape.getHeight();
+
+        // Create and return a new Rectangle2D.Double representing the bounds
+        return new Rectangle2D.Double(x, y, width, height);
     }
 
     @Override
     public Rectangle2D.Double getDrawingArea() {
-        Rectangle2D transformedBounds = getTransformedShape().getBounds2D();
-        Rectangle2D.Double drawingArea = (transformedBounds instanceof Rectangle2D.Double) ?
-                (Rectangle2D.Double) transformedBounds : new Rectangle2D.Double(transformedBounds.getX(),
-                transformedBounds.getY(),
-                transformedBounds.getWidth(),
-                transformedBounds.getHeight());
-
+        Rectangle2D rx = getTransformedShape().getBounds2D();
+        Rectangle2D.Double r = (rx instanceof Rectangle2D.Double) ? (Rectangle2D.Double) rx : new Rectangle2D.Double(rx.getX(), rx.getY(), rx.getWidth(), rx.getHeight());
         if (get(TRANSFORM) == null) {
-            double hitGrowth = AttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1d;
-            Geom.grow(drawingArea, hitGrowth, hitGrowth);
+            double g = SVGAttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1d;
+            Geom.grow(r, g, g);
         } else {
             double strokeTotalWidth = AttributeKeys.getStrokeTotalWidth(this, 1.0);
-            double halfWidth = strokeTotalWidth / 2d;
-
+            double width = strokeTotalWidth / 2d;
             if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
-                halfWidth *= get(STROKE_MITER_LIMIT);
+                width *= get(STROKE_MITER_LIMIT);
             }
-
             if (get(STROKE_CAP) != BasicStroke.CAP_BUTT) {
-                halfWidth += strokeTotalWidth * 2;
+                width += strokeTotalWidth * 2;
             }
-
-            halfWidth++;
-            Geom.grow(drawingArea, halfWidth, halfWidth);
+            width++;
+            Geom.grow(r, width, width);
         }
-        return drawingArea;
+        return r;
     }
 
     /**
@@ -255,10 +254,14 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     @Override
     public void setBounds(Point2D.Double anchor, Point2D.Double lead) {
         invalidateTransformedShape();
-        roundrect.x = Math.min(anchor.x, lead.x);
-        roundrect.y = Math.min(anchor.y, lead.y);
-        roundrect.width = Math.max(0.1, Math.abs(lead.x - anchor.x));
-        roundrect.height = Math.max(0.1, Math.abs(lead.y - anchor.y));
+        double x = Math.min(anchor.x, lead.x);
+        double y = Math.min(anchor.y, lead.y);
+        double width = Math.max(0.1, Math.abs(lead.x - anchor.x));
+        double height = Math.max(0.1, Math.abs(lead.y - anchor.y));
+        rectangleShape.setX(x);
+        rectangleShape.setY(y);
+        rectangleShape.setWidth(width);
+        rectangleShape.setHeight(height);
         invalidate();
     }
 
@@ -268,11 +271,12 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     }
 
     private Shape getTransformedShape() {
+        getRoundRectangle2DDouble();
         if (cachedTransformedShape == null) {
             if (getArcHeight() == 0 || getArcWidth() == 0) {
-                cachedTransformedShape = roundrect.getBounds2D();
+                cachedTransformedShape = getRoundRectangle2DDouble().getBounds2D();
             } else {
-                cachedTransformedShape = (Shape) roundrect.clone();
+                cachedTransformedShape = (Shape) getRoundRectangle2DDouble().clone();
             }
             if (get(TRANSFORM) != null) {
                 cachedTransformedShape = get(TRANSFORM).createTransformedShape(cachedTransformedShape);
@@ -302,11 +306,9 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     @Override
     public void transform(AffineTransform tx) {
         invalidateTransformedShape();
-
         if (get(TRANSFORM) != null
-                ||
+                || //              (tx.getType() & (AffineTransform.TYPE_TRANSLATION | AffineTransform.TYPE_MASK_SCALE)) != tx.getType()) {
                 (tx.getType() & (AffineTransform.TYPE_TRANSLATION)) != tx.getType()) {
-
             if (get(TRANSFORM) == null) {
                 set(TRANSFORM, (AffineTransform) tx.clone());
             } else {
@@ -320,14 +322,12 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
             setBounds(
                     (Point2D.Double) tx.transform(anchor, anchor),
                     (Point2D.Double) tx.transform(lead, lead));
-
             if (get(FILL_GRADIENT) != null
                     && !get(FILL_GRADIENT).isRelativeToFigureBounds()) {
                 Gradient g = FILL_GRADIENT.getClone(this);
                 g.transform(tx);
                 set(FILL_GRADIENT, g);
             }
-
             if (get(STROKE_GRADIENT) != null
                     && !get(STROKE_GRADIENT).isRelativeToFigureBounds()) {
                 Gradient g = STROKE_GRADIENT.getClone(this);
@@ -341,7 +341,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     public void restoreTransformTo(Object geometry) {
         invalidateTransformedShape();
         Object[] restoreData = (Object[]) geometry;
-        roundrect = (RoundRectangle2D.Double) ((RoundRectangle2D.Double) restoreData[0]).clone();
+
         TRANSFORM.setClone(this, (AffineTransform) restoreData[1]);
         FILL_GRADIENT.setClone(this, (Gradient) restoreData[2]);
         STROKE_GRADIENT.setClone(this, (Gradient) restoreData[3]);
@@ -350,7 +350,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     @Override
     public Object getTransformRestoreData() {
         return new Object[]{
-            roundrect.clone(),
+            getRoundRectangle2DDouble().clone(),
             TRANSFORM.getClone(this),
             FILL_GRADIENT.getClone(this),
             STROKE_GRADIENT.getClone(this)};
@@ -378,11 +378,10 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         return handles;
     }
 
-    // CLONING
     @Override
     public SVGRectFigure clone() {
         SVGRectFigure that = (SVGRectFigure) super.clone();
-        that.roundrect = (RoundRectangle2D.Double) this.roundrect.clone();
+        that.rectangleShape = new SVGRectangleShape(this.rectangleShape);
         that.cachedTransformedShape = null;
         that.cachedHitShape = null;
         return that;
