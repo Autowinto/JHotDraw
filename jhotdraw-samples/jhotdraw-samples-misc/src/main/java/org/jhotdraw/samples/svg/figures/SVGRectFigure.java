@@ -62,7 +62,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     /**
      */
 
-    private RoundRectangle2D.Double roundrect;
+    private transient SVGRectangleShape rectangleShape;
     /**
      * This is used to perform faster drawing.
      */
