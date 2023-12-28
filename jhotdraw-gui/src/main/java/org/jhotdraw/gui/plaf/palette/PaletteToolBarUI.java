@@ -111,6 +111,7 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
     protected KeyStroke rightKey;
     private static String FOCUSED_COMP_INDEX = "JToolBar.focusedCompIndex";
 
+
     public static ComponentUI createUI(JComponent c) {
         return new PaletteToolBarUI();
     }
@@ -1074,6 +1075,7 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
             }
         }
 
+        @FeatureEntryPoint("tool palette - mouse released")
         @Override
         public void mouseReleased(MouseEvent evt) {
             if (!tb.isEnabled()) {

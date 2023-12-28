@@ -4,6 +4,7 @@ target
 nb-configuration.xml
 .idea/*
 *.ftf
+*.iml
 /jhotdraw-samples/jhotdraw-samples-misc/nbproject/
 
 *.iml

@@ -152,29 +152,32 @@ public abstract class AbstractDrawing extends AbstractAttributedCompositeFigure 
         return this;
     }
 
-    /*@Override
-    public Rectangle2D.Double getDrawingArea() {
-        Rectangle2D.Double drawingArea;
-        Dimension2DDouble canvasSize = getCanvasSize();
-        if (canvasSize != null) {
-            drawingArea = new Rectangle2D.Double(
-                    0d, 0d,
-                    canvasSize.width, canvasSize.height);
-        } else {
-            drawingArea = super.getDrawingArea();
-            drawingArea.add(0d, 0d);
-            /*drawingArea = new Rectangle2D.Double(
-                    0d, 0d,
-                    canvasSize.width, canvasSize.height);* /
-        }
-        return drawingArea;
-    }*/
+    /*
+     * @Override
+     * public Rectangle2D.Double getDrawingArea() {
+     * Rectangle2D.Double drawingArea;
+     * Dimension2DDouble canvasSize = getCanvasSize();
+     * if (canvasSize != null) {
+     * drawingArea = new Rectangle2D.Double(
+     * 0d, 0d,
+     * canvasSize.width, canvasSize.height);
+     * } else {
+     * drawingArea = super.getDrawingArea();
+     * drawingArea.add(0d, 0d);
+     * /*drawingArea = new Rectangle2D.Double(
+     * 0d, 0d,
+     * canvasSize.width, canvasSize.height);* /
+     * }
+     * return drawingArea;
+     * }
+     */
     @Override
     @SuppressWarnings("unchecked")
     public AbstractDrawing clone() {
         AbstractDrawing that = (AbstractDrawing) super.clone();
         that.inputFormats = (this.inputFormats == null) ? null : (LinkedList<InputFormat>) this.inputFormats.clone();
-        that.outputFormats = (this.outputFormats == null) ? null : (LinkedList<OutputFormat>) this.outputFormats.clone();
+        that.outputFormats = (this.outputFormats == null) ? null
+                : (LinkedList<OutputFormat>) this.outputFormats.clone();
         return that;
     }
 
