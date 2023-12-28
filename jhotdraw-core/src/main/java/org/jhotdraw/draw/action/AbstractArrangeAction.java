@@ -1,8 +1,8 @@
-package org.jhotdraw.draw.figure;
+package org.jhotdraw.draw.action;
 
 import org.jhotdraw.draw.DrawingEditor;
 import org.jhotdraw.draw.DrawingView;
-import org.jhotdraw.draw.action.AbstractSelectedAction;
+import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.util.ResourceBundleUtil;
 
 import javax.swing.undo.AbstractUndoableEdit;
