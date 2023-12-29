@@ -11,11 +11,8 @@ import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.TextHolderFigure;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.undo.AbstractUndoableEdit;
-import javax.swing.undo.UndoableEdit;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.text.*;
-import org.jhotdraw.util.ResourceBundleUtil;
 
 /**
  * A tool to edit figures which implement the {@code TextHolderFigure} interface,
@@ -50,6 +47,7 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
     private static final long serialVersionUID = 1L;
     private FloatingTextField textField;
     private TextHolderFigure typingTarget;
+    private TextToolUtility ttu;
 
     /**
      * Creates a new instance.
@@ -57,12 +55,13 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
     @FeatureEntryPoint("Text tool - Edit")
     public TextEditingTool(TextHolderFigure typingTarget) {
         this.typingTarget = typingTarget;
+        ttu = new TextToolUtility(this);
     }
 
     @FeatureEntryPoint("Text tool - Edit")
     @Override
     public void deactivate(DrawingEditor editor) {
-        endEdit();
+        endOverlay();
         super.deactivate(editor);
     }
 
@@ -73,73 +72,21 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (typingTarget != null) {
-            beginEdit(typingTarget);
+            ttu.beginEdit(typingTarget);
             updateCursor(getView(), e.getPoint());
         }
     }
 
-    @FeatureEntryPoint("Text tool - Edit")
-    protected void beginEdit(TextHolderFigure textHolder) {
-        if (textField == null) {
-            textField = new FloatingTextField();
-            textField.addActionListener(this);
-        }
-        if (textHolder != typingTarget && typingTarget != null) {
-            endEdit();
-        }
-        textField.createOverlay(getView(), textHolder);
-        textField.requestFocus();
-        typingTarget = textHolder;
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent evt) {
-    }
-
     //Override willChange
     @FeatureEntryPoint("Text tool - Edit")
-    protected void endEdit() {
+    protected void endOverlay() {
         if (typingTarget != null) {
             typingTarget.willChange();
-            final TextHolderFigure editedFigure = typingTarget;
-            final String oldText = typingTarget.getText();
-            final String newText = textField.getText();
-            if (newText.length() > 0) {
-                typingTarget.willChange();
-                typingTarget.setText(newText);
-                typingTarget.changed();
-            }
-            UndoableEdit edit = new AbstractUndoableEdit() {
-                private static final long serialVersionUID = 1L;
 
-                @Override
-                public String getPresentationName() {
-                    ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
-                    return labels.getString("attribute.text.text");
-                }
-
-                @Override
-                public void undo() {
-                    super.undo();
-                    editedFigure.willChange();
-                    editedFigure.setText(oldText);
-                    editedFigure.changed();
-                }
-
-                @Override
-                public void redo() {
-                    super.redo();
-                    editedFigure.willChange();
-                    editedFigure.setText(newText);
-                    editedFigure.changed();
-                }
-            };
-            getDrawing().fireUndoableEditHappened(edit);
             typingTarget.changed();
             typingTarget = null;
             textField.endOverlay();
         }
-        //         view().checkDamage();
     }
 
     @Override
@@ -151,18 +98,14 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        endEdit();
+        ttu.endEdit();
         fireToolDone();
-    }
-
-    public boolean isEditing() {
-        return typingTarget != null;
     }
 
     @Override
     public void updateCursor(DrawingView view, Point p) {
         if (view.isEnabled()) {
-            view.setCursor(Cursor.getPredefinedCursor(isEditing() ? Cursor.DEFAULT_CURSOR : Cursor.CROSSHAIR_CURSOR));
+            view.setCursor(Cursor.getPredefinedCursor(ttu.isEditing() ? Cursor.DEFAULT_CURSOR : Cursor.CROSSHAIR_CURSOR));
         } else {
             view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
