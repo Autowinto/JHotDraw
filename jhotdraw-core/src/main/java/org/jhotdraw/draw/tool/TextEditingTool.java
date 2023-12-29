@@ -87,13 +87,12 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
         if (textHolder != typingTarget && typingTarget != null) {
             endEdit();
         }
+        overlayCreator(textHolder);
+    }
+    private void overlayCreator(TextHolderFigure textHolder) {
         textField.createOverlay(getView(), textHolder);
         textField.requestFocus();
         typingTarget = textHolder;
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent evt) {
     }
 
     //Override willChange
@@ -104,18 +103,22 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
             final TextHolderFigure editedFigure = typingTarget;
             final String oldText = typingTarget.getText();
             final String newText = textField.getText();
-            if (newText.length() > 0) {
-                typingTarget.willChange();
-                typingTarget.setText(newText);
-                typingTarget.changed();
-            }
+
+            handleText(newText);
+
             UndoableEdit edit = TextToolUtility.createUndoableEdit(editedFigure, oldText, newText);
             getDrawing().fireUndoableEditHappened(edit);
-            typingTarget.changed();
-            typingTarget = null;
-            textField.endOverlay();
+
+            TextToolUtility.removeOverlay(typingTarget, textField);
         }
-        //         view().checkDamage();
+    }
+
+    private void handleText(String newText) {
+        if (newText.length() > 0) {
+            typingTarget.willChange();
+            typingTarget.setText(newText);
+            typingTarget.changed();
+        }
     }
 
     @Override
@@ -131,17 +134,9 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
         fireToolDone();
     }
 
-    public boolean isEditing() {
-        return typingTarget != null;
-    }
-
     @Override
     public void updateCursor(DrawingView view, Point p) {
-        if (view.isEnabled()) {
-            view.setCursor(Cursor.getPredefinedCursor(isEditing() ? Cursor.DEFAULT_CURSOR : Cursor.CROSSHAIR_CURSOR));
-        } else {
-            view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        }
+        TextToolUtility.updateCursor(view, p);
     }
 
     @Override
