@@ -13,17 +13,9 @@ import java.awt.event.*;
 public class TextToolUtility {
 
     private FloatingTextField textField;
-    private TextHolderFigure typingTarget;
-    private AbstractTool abstractTool;
+    private static TextHolderFigure typingTarget;
 
-    /*public TextToolUtility(CreationTool tool) {
-        this.creationTool = tool;
-    }*/
-    public TextToolUtility(AbstractTool tool) {
-        this.abstractTool = tool;
-    }
-
-    public UndoableEdit createUndoableEdit(TextHolderFigure editedFigure, String oldText, String newText) {
+    public static UndoableEdit createUndoableEdit(TextHolderFigure editedFigure, String oldText, String newText) {
         return new AbstractUndoableEdit() {
             private static final long serialVersionUID = 1L;
             @Override
@@ -51,7 +43,7 @@ public class TextToolUtility {
         };
     }
 
-    public boolean isEditing() {
+    public static boolean isEditing() {
         return typingTarget != null;
     }
 
