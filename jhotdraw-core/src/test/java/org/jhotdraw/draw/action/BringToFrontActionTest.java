@@ -4,7 +4,6 @@ import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.draw.figure.RectangleFigure;
 import org.mockito.Mockito;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.util.*;
@@ -31,10 +30,6 @@ public class BringToFrontActionTest {
 
         // Mock the drawing which is returned when the view is asked for the drawing
         Mockito.when(this.view.getDrawing()).thenReturn(this.drawing);
-    }
-
-    @AfterMethod
-    public void tearDown() {
     }
 
     @Test
