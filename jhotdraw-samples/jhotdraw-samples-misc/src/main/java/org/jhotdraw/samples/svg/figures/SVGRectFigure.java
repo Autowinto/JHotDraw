@@ -44,22 +44,6 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
      * Identifies the {@code arcHeight} JavaBeans property.
      */
     public static final String ARC_HEIGHT_PROPERTY = "arcHeight";
-    /**
-     * The variable acv is used for generating the locations of the control
-     * points for the rounded rectangle using path.curveTo.
-     */
-    private static final double ACV;
-
-    static {
-        double angle = Math.PI / 4.0;
-        double a = 1.0 - Math.cos(angle);
-        double b = Math.tan(angle);
-        double c = Math.sqrt(1.0 + b * b) - 1 + a;
-        double cv = 4.0 / 3.0 * a * b / c;
-        ACV = (1.0 - cv);
-    }
-    /**
-     */
 
     /**
      * Creates a new instance of SVGRect
