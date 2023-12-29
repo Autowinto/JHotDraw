@@ -4,7 +4,6 @@ import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.draw.figure.RectangleFigure;
 import org.mockito.Mockito;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import java.util.*;
@@ -45,19 +44,19 @@ public class SendToBackActionTest {
         // Mock which selected figures is selected
         Mockito.when(this.view.getSelectedFigures()).thenReturn(selectedFigures);
 
-        // Get figure in front
+        // Get figure in back
         Figure figureInBackBeforeSorting = this.drawing.getFiguresFrontToBack().get(this.drawing.getFiguresFrontToBack().size() - 1);
 
-        // Check that figure in front is figure A
+        // Check that figure in back is figure A
         assertSame(figureInBackBeforeSorting, this.figureA);
 
-        // Bring figure to front
+        // Send figure to back
         SendToBackAction.sendToBack(this.view, selectedFigures);
 
-        // Get figure in front after sorting
+        // Get figure in back after sorting
         Figure figureInBackAfterSorting = this.drawing.getFiguresFrontToBack().get(this.drawing.getFiguresFrontToBack().size() - 1);
 
-        // Check that figure in front after sorting is figure A
+        // Check that figure in back after sorting is figure A
         assertSame(figureInBackAfterSorting, this.figureA);
     }
 
@@ -74,19 +73,19 @@ public class SendToBackActionTest {
         // Mock which selected figures is selected
         Mockito.when(this.view.getSelectedFigures()).thenReturn(selectedFigures);
 
-        // Get figure in front
+        // Get figure in back
         Figure figureInBackBeforeSorting = this.drawing.getFiguresFrontToBack().get(this.drawing.getFiguresFrontToBack().size() - 1);
 
-        // Check that figure in front before sorting is figure B
+        // Check that figure in back before sorting is figure A
         assertSame(figureInBackBeforeSorting, this.figureA);
 
-        // Bring figure to front
+        // Send figure to back
         SendToBackAction.sendToBack(this.view, selectedFigures);
 
-        // Get figure in front after sorting
+        // Get figure in back after sorting
         Figure figureInBackAfterSorting = this.drawing.getFiguresFrontToBack().get(this.drawing.getFiguresFrontToBack().size() - 1);
 
-        // Check that figure in front after sorting is figure A
+        // Check that figure in back after sorting is figure B
         assertSame(figureInBackAfterSorting, this.figureB);
     }
 
@@ -104,19 +103,19 @@ public class SendToBackActionTest {
         // Mock which selected figures is selected
         Mockito.when(this.view.getSelectedFigures()).thenReturn(selectedFigures);
 
-        // Get figure in front
+        // Get figure in back
         Figure figureInBackBeforeSorting = this.drawing.getFiguresFrontToBack().get(this.drawing.getFiguresFrontToBack().size() - 1);
 
-        // Check that figure in front before sorting is figure C
+        // Check that figure in back before sorting is figure A
         assertSame(figureInBackBeforeSorting, this.figureA);
 
-        // Bring figure to front
+        // Send figure to back
         SendToBackAction.sendToBack(this.view, selectedFigures);
 
-        // Get figure in front after sorting
+        // Get figure in back after sorting
         Figure figureInBackAfterSorting = this.drawing.getFiguresFrontToBack().get(this.drawing.getFiguresFrontToBack().size() - 1);
 
-        // Check that figure in front after sorting is figure A
+        // Check that figure in back after sorting is figure C
         assertSame(figureInBackAfterSorting, this.figureC);
     }
 }
