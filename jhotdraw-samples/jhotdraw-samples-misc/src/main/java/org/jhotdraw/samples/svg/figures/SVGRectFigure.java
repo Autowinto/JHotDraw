@@ -131,53 +131,64 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
 
 
     /**
-     * Draws the figure.
+     * Draws the figure's stroke based on the shape properties.
      *
      * @param g the graphics to draw into
      */
     @Override
     protected void drawStroke(Graphics2D g) {
-        // Use properties from the RectangleShape instance
-        getRectangleShape();
-
         if (arcHeight == 0 && arcWidth == 0) {
-            g.draw(new Rectangle2D.Double(
-                    this.x,
-                    this.y,
-                    this.width,
-                    this.height)
-            );
+            drawRectangle(g);
         } else {
-            // We have to generate the path for the round rectangle manually,
-            // because the path of a Java RoundRectangle is drawn counter clockwise
-            // whereas an SVG rect needs to be drawn clockwise.
-            Path2D.Double p = new Path2D.Double();
-            double aw = arcWidth / 2d;
-            double ah = arcHeight / 2d;
-            p.moveTo((x + aw), y);
-            p.lineTo((x + width - aw), y);
-            p.curveTo((x + width - aw * ACV), y,
-                    (x + width), (y + ah * ACV),
-                    (x + width), (y + ah));
-            p.lineTo((x + width), (y + height - ah));
-            p.curveTo(
-                    (x + width), (y + height - ah * ACV),
-                    (x + width - aw * ACV), (y + height),
-                    (x + width - aw), (y + height));
-            p.lineTo((x + aw), (y + height));
-            p.curveTo((x + aw * ACV), (y + height),
-                    x, (y + height - ah * ACV),
-                    x, (y + height - ah));
-            p.lineTo(x, (y + ah));
-            p.curveTo(x, (y + ah * ACV),
-                    (x + aw * ACV), y,
-                    (x + aw), y);
-            p.closePath();
-            g.draw(p);
+            drawRoundedRectangle(g);
         }
     }
 
+    private void drawRectangle(Graphics2D g) {
+        g.draw(new Rectangle2D.Double(this.x, this.y, this.width, this.height));
+    }
 
+    private void drawRoundedRectangle(Graphics2D g) {
+        Path2D.Double path = createRoundedRectanglePath();
+        g.draw(path);
+    }
+
+    /**
+     * Creates a rounded rectangle path based on the shape properties.
+     *
+     * @return the rounded rectangle path
+     */
+    private Path2D.Double createRoundedRectanglePath() {
+        Path2D.Double path = new Path2D.Double();
+        double arcWidthHalf = arcWidth / 2d;
+        double arcHeightHalf = arcHeight / 2d;
+        double controlValue = ArcControlValueCalculator.calculateArcControlValue();
+
+        path.moveTo((x + arcWidthHalf), y);
+        path.lineTo((x + width - arcWidthHalf), y);
+        path.curveTo(
+                (x + width - arcWidthHalf * controlValue), y,
+                (x + width), (y + arcHeightHalf * controlValue),
+                (x + width), (y + arcHeightHalf)
+        );
+        path.lineTo((x + width), (y + height - arcHeightHalf));
+        path.curveTo(
+                (x + width), (y + height - arcHeightHalf * controlValue),
+                (x + width - arcWidthHalf * controlValue), (y + height),
+                (x + width - arcWidthHalf), (y + height)
+        );
+        path.lineTo((x + arcWidthHalf), (y + height));
+        path.curveTo((x + arcWidthHalf * controlValue), (y + height),
+                x, (y + height - arcHeightHalf * controlValue),
+                x, (y + height - arcHeightHalf));
+        path.lineTo(x, (y + arcHeightHalf));
+        path.curveTo(x, (y + arcHeightHalf * controlValue),
+                (x + arcWidthHalf * controlValue), y,
+                (x + arcWidthHalf), y);
+        path.closePath();
+
+        return path;
+    }
 
     /**
      * Shape and bounds
