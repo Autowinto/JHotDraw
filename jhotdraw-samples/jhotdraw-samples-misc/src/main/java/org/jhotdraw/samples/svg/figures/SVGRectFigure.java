@@ -93,12 +93,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     private RoundRectangle2D.Double getRoundRectangle2DDouble() {
         getRectangleShape();
         return new RoundRectangle2D.Double(
-                this.x,
-                this.y,
-                this.width,
-                this.height,
-                this.arcWidth,
-                this.arcHeight
+                this.x, this.y, this.width, this.height, this.arcWidth, this.arcHeight
         );
     }
 
