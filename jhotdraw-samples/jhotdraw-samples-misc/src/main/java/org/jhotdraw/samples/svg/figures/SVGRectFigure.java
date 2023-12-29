@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.*;
 import static org.jhotdraw.draw.AttributeKeys.FILL_COLOR;
 import static org.jhotdraw.draw.AttributeKeys.STROKE_CAP;
@@ -62,7 +61,22 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     /**
      */
 
+    /**
+     * Creates a new instance of SVGRect
+     * it handles the rectangle properties.
+     */
     private transient SVGRectangleShape rectangleShape;
+
+    /**
+     * This is used to store the rectangle properties.
+     */
+    double arcWidth;
+    double arcHeight;
+    double x;
+    double y;
+    double width;
+    double height;
+
     /**
      * This is used to perform faster drawing.
      */
@@ -75,7 +89,6 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     /**
      * Creates a new instance.
      */
-
     public SVGRectFigure() {
         this(0, 0, 0, 0);
     }
@@ -83,25 +96,50 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     public SVGRectFigure(double x, double y, double width, double height) {
         this(x, y, width, height, 0, 0);
     }
-    @FeatureEntryPoint("rectangle tool - draw")
+
     public SVGRectFigure(double x, double y, double width, double height, double rx, double ry) {
         rectangleShape  = new SVGRectangleShape(x, y, width, height, rx, ry);
         SVGAttributeKeys.setDefaults(this);
         setConnectable(false);
     }
-    // DRAWING
+
+    /**
+     * Gets the Rectangle2D.Double representing the rectangular shape.
+     */
+    private RoundRectangle2D.Double getRoundRectangle2DDouble() {
+        getRectangleShape();
+        return new RoundRectangle2D.Double(
+                this.x,
+                this.y,
+                this.width,
+                this.height,
+                this.arcWidth,
+                this.arcHeight
+        );
+    }
+
+    /**
+     * Gets the Rectangle shape properties and stores them in private variables.
+     */
+    private void getRectangleShape() {
+        this.arcWidth = rectangleShape.getArcWidth();
+        this.arcHeight = rectangleShape.getArcHeight();
+        this.x = rectangleShape.getX();
+        this.y = rectangleShape.getY();
+        this.width = rectangleShape.getWidth();
+        this.height = rectangleShape.getHeight();
+    }
+
+
+    /**
+     * Draws the figure.
+     *
+     * @param g the graphics to draw into
+     */
     @Override
     protected void drawFill(Graphics2D g) {
-        // Use properties from the RectangleShape instance
-        double arcWidth = rectangleShape.getArcWidth();
-        double arcHeight = rectangleShape.getArcHeight();
-        double x = rectangleShape.getX();
-        double y = rectangleShape.getY();
-        double width = rectangleShape.getWidth();
-        double height = rectangleShape.getHeight();
-
         // Create a RoundRectangle2D for drawing
-        RoundRectangle2D.Double shape = new RoundRectangle2D.Double(x, y, width, height, arcWidth, arcHeight);
+        RoundRectangle2D.Double shape = getRoundRectangle2DDouble();
 
         // Draw the shape
         if (arcHeight == 0d && arcWidth == 0d) {
@@ -111,18 +149,25 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         }
     }
 
+
+
+    /**
+     * Draws the figure.
+     *
+     * @param g the graphics to draw into
+     */
     @Override
     protected void drawStroke(Graphics2D g) {
         // Use properties from the RectangleShape instance
-        double arcWidth = rectangleShape.getArcWidth();
-        double arcHeight = rectangleShape.getArcHeight();
-        double x = rectangleShape.getX();
-        double y = rectangleShape.getY();
-        double width = rectangleShape.getWidth();
-        double height = rectangleShape.getHeight();
+        getRectangleShape();
 
         if (arcHeight == 0 && arcWidth == 0) {
-            g.draw(new Rectangle2D.Double(x, y, width, height));
+            g.draw(new Rectangle2D.Double(
+                    this.x,
+                    this.y,
+                    this.width,
+                    this.height)
+            );
         } else {
             // We have to generate the path for the round rectangle manually,
             // because the path of a Java RoundRectangle is drawn counter clockwise
@@ -154,16 +199,11 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     }
 
 
-    private RoundRectangle2D.Double getRoundRectangle2DDouble() {
-        return new RoundRectangle2D.Double(
-                rectangleShape.getX(), rectangleShape.getY(),
-                rectangleShape.getWidth(), rectangleShape.getHeight(),
-                rectangleShape.getArcWidth(), rectangleShape.getArcHeight()
-        );
-    }
 
-    // SHAPE AND BOUNDS
-    // Delegate methods to rectangleShape
+    /**
+     * Shape and bounds
+     * Delegate methods to rectangleShape
+     */
     public double getX() {
         return rectangleShape.getX();
     }
@@ -212,33 +252,34 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     @Override
     public Rectangle2D.Double getBounds() {
         // Use properties from the RectangleShape instance
-        double x = rectangleShape.getX();
-        double y = rectangleShape.getY();
-        double width = rectangleShape.getWidth();
-        double height = rectangleShape.getHeight();
+        getRectangleShape();
 
         // Create and return a new Rectangle2D.Double representing the bounds
-        return new Rectangle2D.Double(x, y, width, height);
+        return new Rectangle2D.Double(this.x, this.y, this.width, this.height);
     }
 
     @Override
     public Rectangle2D.Double getDrawingArea() {
         Rectangle2D rx = getTransformedShape().getBounds2D();
-        Rectangle2D.Double r = (rx instanceof Rectangle2D.Double) ? (Rectangle2D.Double) rx : new Rectangle2D.Double(rx.getX(), rx.getY(), rx.getWidth(), rx.getHeight());
+        Rectangle2D.Double r = (rx instanceof Rectangle2D.Double) ?
+                (Rectangle2D.Double) rx :
+                new Rectangle2D.Double(
+                        rx.getX(), rx.getY(), rx.getWidth(), rx.getHeight()
+                );
         if (get(TRANSFORM) == null) {
             double g = SVGAttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1d;
             Geom.grow(r, g, g);
         } else {
             double strokeTotalWidth = AttributeKeys.getStrokeTotalWidth(this, 1.0);
-            double width = strokeTotalWidth / 2d;
+            double strokeWidth = strokeTotalWidth / 2d;
             if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
-                width *= get(STROKE_MITER_LIMIT);
+                strokeWidth *= get(STROKE_MITER_LIMIT);
             }
             if (get(STROKE_CAP) != BasicStroke.CAP_BUTT) {
-                width += strokeTotalWidth * 2;
+                strokeWidth += strokeTotalWidth * 2;
             }
-            width++;
-            Geom.grow(r, width, width);
+            strokeWidth++;
+            Geom.grow(r, strokeWidth, strokeWidth);
         }
         return r;
     }
@@ -254,14 +295,14 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     @Override
     public void setBounds(Point2D.Double anchor, Point2D.Double lead) {
         invalidateTransformedShape();
-        double x = Math.min(anchor.x, lead.x);
-        double y = Math.min(anchor.y, lead.y);
-        double width = Math.max(0.1, Math.abs(lead.x - anchor.x));
-        double height = Math.max(0.1, Math.abs(lead.y - anchor.y));
-        rectangleShape.setX(x);
-        rectangleShape.setY(y);
-        rectangleShape.setWidth(width);
-        rectangleShape.setHeight(height);
+        double setX = Math.min(anchor.x, lead.x);
+        double setY = Math.min(anchor.y, lead.y);
+        double setWidth = Math.max(0.1, Math.abs(lead.x - anchor.x));
+        double setHeight = Math.max(0.1, Math.abs(lead.y - anchor.y));
+        rectangleShape.setX(setX);
+        rectangleShape.setY(setY);
+        rectangleShape.setWidth(setWidth);
+        rectangleShape.setHeight(setHeight);
         invalidate();
     }
 
