@@ -128,8 +128,6 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         }
     }
 
-
-
     /**
      * Draws the figure's stroke based on the shape properties.
      *
@@ -248,30 +246,65 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         return new Rectangle2D.Double(this.x, this.y, this.width, this.height);
     }
 
+    /**
+     * Gets the drawing area of the figure as a Rectangle2D.Double.
+     *
+     * @return The bounding rectangle of the transformed shape.
+     */
     @Override
     public Rectangle2D.Double getDrawingArea() {
-        Rectangle2D rx = getTransformedShape().getBounds2D();
-        Rectangle2D.Double r = (rx instanceof Rectangle2D.Double) ?
-                (Rectangle2D.Double) rx :
+        Rectangle2D.Double bounds = getTransformedBounds();
+        adjustBoundsForStroke(bounds);
+        return bounds;
+    }
+
+    /**
+     * gets the transformed bounds of the figure.
+     *
+     * @return The transformed bounds.
+     */
+    private Rectangle2D.Double getTransformedBounds() {
+        Rectangle2D transformedShapeBounds = getTransformedShape().getBounds2D();
+        return transformedShapeBounds instanceof Rectangle2D.Double ?
+                (Rectangle2D.Double) transformedShapeBounds :
                 new Rectangle2D.Double(
-                        rx.getX(), rx.getY(), rx.getWidth(), rx.getHeight()
+                        transformedShapeBounds.getX(),
+                        transformedShapeBounds.getY(),
+                        transformedShapeBounds.getWidth(),
+                        transformedShapeBounds.getHeight()
                 );
+    }
+
+    /**
+     * Adjusts the bounds of the figure for the stroke.
+     *
+     * @param bounds The bounds to adjust.
+     */
+    private void adjustBoundsForStroke(Rectangle2D.Double bounds) {
         if (get(TRANSFORM) == null) {
-            double g = SVGAttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1d;
-            Geom.grow(r, g, g);
+            double growthFactor = SVGAttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1d;
+            Geom.grow(bounds, growthFactor, growthFactor);
         } else {
-            double strokeTotalWidth = AttributeKeys.getStrokeTotalWidth(this, 1.0);
-            double strokeWidth = strokeTotalWidth / 2d;
-            if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
-                strokeWidth *= get(STROKE_MITER_LIMIT);
-            }
-            if (get(STROKE_CAP) != BasicStroke.CAP_BUTT) {
-                strokeWidth += strokeTotalWidth * 2;
-            }
-            strokeWidth++;
-            Geom.grow(r, strokeWidth, strokeWidth);
+            double strokeWidth = calculateStrokeWidth();
+            Geom.grow(bounds, strokeWidth, strokeWidth);
         }
-        return r;
+    }
+
+    /**
+     * Calculates the stroke width.
+     *
+     * @return The stroke width.
+     */
+    private double calculateStrokeWidth() {
+        double strokeTotalWidth = AttributeKeys.getStrokeTotalWidth(this, 1.0);
+        double strokeWidth = strokeTotalWidth / 2d;
+        if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
+            strokeWidth *= get(STROKE_MITER_LIMIT);
+        }
+        if (get(STROKE_CAP) != BasicStroke.CAP_BUTT) {
+            strokeWidth += strokeTotalWidth * 2;
+        }
+        return strokeWidth + 1;
     }
 
     /**
