@@ -61,14 +61,12 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     private static final long serialVersionUID = 1L;
     private FloatingTextField textField;
     private TextHolderFigure typingTarget;
-    private TextToolUtility ttu;
     /**
      * Creates a new instance.
      */
     @FeatureEntryPoint("Text tool - Create")
     public TextCreationTool(TextHolderFigure prototype) {
         super(prototype);
-        ttu = new TextToolUtility(this);
     }
 
     /**
@@ -77,13 +75,12 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     @FeatureEntryPoint("Text tool - Create")
     public TextCreationTool(TextHolderFigure prototype, Map<AttributeKey<?>, Object> attributes) {
         super(prototype, attributes);
-        ttu = new TextToolUtility(this);
     }
 
     @FeatureEntryPoint("Text tool - Create")
     @Override
     public void deactivate(DrawingEditor editor) {
-        removeOverlay();
+        endEdit();
         super.deactivate(editor);
     }
 
@@ -113,7 +110,12 @@ public class TextCreationTool extends CreationTool implements ActionListener {
         }
     }
 
-
+    @Override
+    public void mouseReleased(MouseEvent evt) {
+    }
+    @Override
+    public void mouseDragged(java.awt.event.MouseEvent e) {
+    }
     @FeatureEntryPoint("Text tool - Create")
     protected void beginEdit(TextHolderFigure textHolder) {
         if (textField == null) {
@@ -132,7 +134,6 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     @FeatureEntryPoint("Text tool - Create")
     protected void removeOverlay() {
         if (typingTarget != null) {
-            typingTarget.willChange();
 
             typingTarget.changed();
             typingTarget = null;
@@ -160,9 +161,15 @@ public class TextCreationTool extends CreationTool implements ActionListener {
             final TextHolderFigure editedFigure = typingTarget;
             final String oldText = typingTarget.getText();
             final String newText = textField.getText();
-            textHandler(newText);
-            UndoableEdit edit = ttu.createUndoableEdit(editedFigure, oldText, newText);
+            if (newText.length() > 0) {
+                typingTarget.setText(newText);
+            } else {
+                handleEmptyText();
+            }
+
+            UndoableEdit edit = TextToolUtility.createUndoableEdit(editedFigure, oldText, newText);
             getDrawing().fireUndoableEditHappened(edit);
+
             removeOverlay();
         }
     }
@@ -178,7 +185,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
             getDrawing().remove(getAddedFigure());
             // XXX - Fire undoable edit here!!
         } else {
-            typingTarget.setText("");
+            typingTarget.setText("XD");
             typingTarget.changed();
         }
     }
@@ -192,7 +199,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     @Override
     public void updateCursor(DrawingView view, Point p) {
         if (view.isEnabled()) {
-            view.setCursor(Cursor.getPredefinedCursor(ttu.isEditing() ? Cursor.DEFAULT_CURSOR : Cursor.CROSSHAIR_CURSOR));
+            view.setCursor(Cursor.getPredefinedCursor(TextToolUtility.isEditing() ? Cursor.DEFAULT_CURSOR : Cursor.CROSSHAIR_CURSOR));
         } else {
             view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         }
