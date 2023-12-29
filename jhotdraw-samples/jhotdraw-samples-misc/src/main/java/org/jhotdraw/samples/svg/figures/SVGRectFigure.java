@@ -365,39 +365,53 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     /**
      * Transforms the figure.
      *
-     * @param tx The transformation.
+     * @param transform The transformation.
      */
     @Override
-    public void transform(AffineTransform tx) {
+    public void transform(AffineTransform transform) {
         invalidateTransformedShape();
-        if (get(TRANSFORM) != null
-                || //              (tx.getType() & (AffineTransform.TYPE_TRANSLATION | AffineTransform.TYPE_MASK_SCALE)) != tx.getType()) {
-                (tx.getType() & (AffineTransform.TYPE_TRANSLATION)) != tx.getType()) {
-            if (get(TRANSFORM) == null) {
-                set(TRANSFORM, (AffineTransform) tx.clone());
-            } else {
-                AffineTransform t = TRANSFORM.getClone(this);
-                t.preConcatenate(tx);
-                set(TRANSFORM, t);
-            }
+        if (shouldUpdateTransform(transform)) {
+            updateTransform(transform);
         } else {
-            Point2D.Double anchor = getStartPoint();
-            Point2D.Double lead = getEndPoint();
-            setBounds(
-                    (Point2D.Double) tx.transform(anchor, anchor),
-                    (Point2D.Double) tx.transform(lead, lead));
-            if (get(FILL_GRADIENT) != null
-                    && !get(FILL_GRADIENT).isRelativeToFigureBounds()) {
-                Gradient g = FILL_GRADIENT.getClone(this);
-                g.transform(tx);
-                set(FILL_GRADIENT, g);
-            }
-            if (get(STROKE_GRADIENT) != null
-                    && !get(STROKE_GRADIENT).isRelativeToFigureBounds()) {
-                Gradient g = STROKE_GRADIENT.getClone(this);
-                g.transform(tx);
-                set(STROKE_GRADIENT, g);
-            }
+            updateBounds(transform);
+            updateGradients(transform);
+        }
+    }
+
+    private boolean shouldUpdateTransform(AffineTransform transform) {
+        return get(TRANSFORM) != null ||
+                (transform.getType() & AffineTransform.TYPE_TRANSLATION) != transform.getType();
+    }
+
+    private void updateTransform(AffineTransform transform) {
+        if (get(TRANSFORM) == null) {
+            set(TRANSFORM, (AffineTransform) transform.clone());
+        } else {
+            AffineTransform currentTransform = TRANSFORM.getClone(this);
+            currentTransform.preConcatenate(transform);
+            set(TRANSFORM, currentTransform);
+        }
+    }
+
+    private void updateBounds(AffineTransform transform) {
+        Point2D.Double anchor = getStartPoint();
+        Point2D.Double lead = getEndPoint();
+        setBounds(
+                (Point2D.Double) transform.transform(anchor, anchor),
+                (Point2D.Double) transform.transform(lead, lead)
+        );
+    }
+
+    private void updateGradients(AffineTransform transform) {
+        if (get(FILL_GRADIENT) != null && !get(FILL_GRADIENT).isRelativeToFigureBounds()) {
+            Gradient fillGradient = FILL_GRADIENT.getClone(this);
+            fillGradient.transform(transform);
+            set(FILL_GRADIENT, fillGradient);
+        }
+        if (get(STROKE_GRADIENT) != null && !get(STROKE_GRADIENT).isRelativeToFigureBounds()) {
+            Gradient strokeGradient = STROKE_GRADIENT.getClone(this);
+            strokeGradient.transform(transform);
+            set(STROKE_GRADIENT, strokeGradient);
         }
     }
 
