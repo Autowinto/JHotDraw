@@ -13,10 +13,10 @@ import org.jhotdraw.draw.figure.TextHolderFigure;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-//import javax.swing.undo.AbstractUndoableEdit;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.text.*;
-//import org.jhotdraw.util.ResourceBundleUtil;
+
+import javax.swing.undo.UndoableEdit;
 
 /**
  * A tool to create figures which implement the {@code TextHolderFigure}
@@ -68,7 +68,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     @FeatureEntryPoint("Text tool - Create")
     public TextCreationTool(TextHolderFigure prototype) {
         super(prototype);
-        ttu = new TextToolUtility( this);
+        ttu = new TextToolUtility(this);
     }
 
     /**
@@ -83,7 +83,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     @FeatureEntryPoint("Text tool - Create")
     @Override
     public void deactivate(DrawingEditor editor) {
-        endEdit();
+        removeOverlay();
         super.deactivate(editor);
     }
 
@@ -97,7 +97,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
         // consistent with the search sequence used by the
         // HandleTracker, SelectAreaTracker, DelegationSelectionTool, SelectionTool.
         if (typingTarget != null) {
-            ttu.endEdit();
+            endEdit();
             if (isToolDoneAfterCreation()) {
                 fireToolDone();
             }
@@ -113,6 +113,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
         }
     }
 
+
     @FeatureEntryPoint("Text tool - Create")
     protected void beginEdit(TextHolderFigure textHolder) {
         if (textField == null) {
@@ -120,7 +121,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
             textField.addActionListener(this);
         }
         if (textHolder != typingTarget && typingTarget != null) {
-            ttu.endEdit();
+            endEdit();
         }
         textField.createOverlay(getView(), textHolder);
         textField.requestFocus();
@@ -129,7 +130,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
 
 
     @FeatureEntryPoint("Text tool - Create")
-    protected void endEdit() {
+    protected void removeOverlay() {
         if (typingTarget != null) {
             typingTarget.willChange();
 
@@ -148,16 +149,43 @@ public class TextCreationTool extends CreationTool implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        System.out.println("Action performed being called");
-        ttu.endEdit();
+        endEdit();
         if (isToolDoneAfterCreation()) {
             fireToolDone();
+        }
+    }
+    private void endEdit() {
+        if (typingTarget != null) {
+            typingTarget.willChange();
+            final TextHolderFigure editedFigure = typingTarget;
+            final String oldText = typingTarget.getText();
+            final String newText = textField.getText();
+            textHandler(newText);
+            UndoableEdit edit = ttu.createUndoableEdit(editedFigure, oldText, newText);
+            getDrawing().fireUndoableEditHappened(edit);
+            removeOverlay();
+        }
+    }
+    private void textHandler(String newText) {
+        if (newText.length() > 0) {
+            typingTarget.setText(newText);
+        } else {
+            handleEmptyText();
+        }
+    }
+    private void handleEmptyText() {
+        if (createdFigure != null) {
+            getDrawing().remove(getAddedFigure());
+            // XXX - Fire undoable edit here!!
+        } else {
+            typingTarget.setText("");
+            typingTarget.changed();
         }
     }
 
     @Override
     protected void creationFinished(Figure createdFigure) {
-        ttu.beginEdit((TextHolderFigure) createdFigure);
+        beginEdit((TextHolderFigure) createdFigure);
         updateCursor(getView(), new Point(0, 0));
     }
 
