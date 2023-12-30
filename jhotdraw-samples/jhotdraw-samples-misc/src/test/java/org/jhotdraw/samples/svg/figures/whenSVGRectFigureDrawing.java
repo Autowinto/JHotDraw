@@ -20,12 +20,12 @@ public class whenSVGRectFigureDrawing extends Stage<whenSVGRectFigureDrawing> {
     private BufferedImage bufferedImage;
 
     public whenSVGRectFigureDrawing drawingRectangle() {
-        //Create BufferedImage instance
+       //Create BufferedImage instance
         bufferedImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
-        //Create Graphics2D instance
+       //Create Graphics2D instance
         Graphics2D g = bufferedImage.createGraphics();
         //Draw the rectangle
-        this.svgRectFigure.drawStroke(g);
+        svgRectFigure.drawStroke(g);
         return this;
     }
 

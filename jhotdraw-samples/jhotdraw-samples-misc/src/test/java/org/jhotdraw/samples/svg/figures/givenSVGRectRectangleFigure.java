@@ -6,16 +6,10 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 public class givenSVGRectRectangleFigure extends Stage<givenSVGRectRectangleFigure> {
 
     @ProvidedScenarioState
-    private double y = 10;
-
-    @ProvidedScenarioState
-    private double width = 16;
-
-    @ProvidedScenarioState
     public SVGRectFigure svgRectFigure;
 
     public givenSVGRectRectangleFigure creatingRectangle() {
-        svgRectFigure = new SVGRectFigure(2, y, width, 2, 1d, 1d);
+        svgRectFigure = new SVGRectFigure(1, 4, 6, 6, 1d, 1d);
         return this;
     }
 
