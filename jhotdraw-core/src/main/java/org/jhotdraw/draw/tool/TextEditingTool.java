@@ -107,8 +107,7 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
             final TextHolderFigure editedFigure = typingTarget;
             final String oldText = typingTarget.getText();
             final String newText = textField.getText();
-
-            handleText(newText);
+            textHandler(newText);
 
             UndoableEdit edit = TextToolUtility.createUndoableEdit(editedFigure, oldText, newText);
             getDrawing().fireUndoableEditHappened(edit);
@@ -117,7 +116,7 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
         }
     }
 
-    private void handleText(String newText) {
+    private void textHandler(String newText) {
         if (newText.length() > 0) {
             typingTarget.willChange();
             typingTarget.setText(newText);
