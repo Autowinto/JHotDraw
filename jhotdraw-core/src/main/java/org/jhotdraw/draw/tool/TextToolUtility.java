@@ -7,7 +7,6 @@ import org.jhotdraw.util.ResourceBundleUtil;
 
 import javax.swing.*;
 import javax.swing.undo.AbstractUndoableEdit;
-import javax.swing.undo.UndoableEdit;
 import java.awt.*;
 import java.awt.event.*;
 
