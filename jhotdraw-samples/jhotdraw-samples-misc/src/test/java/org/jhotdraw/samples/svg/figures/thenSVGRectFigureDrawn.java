@@ -4,22 +4,11 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import org.junit.Assert;
 
-import java.awt.image.BufferedImage;
-import java.util.Arrays;
-
-import static org.junit.Assert.assertNotEquals;
-
 public class thenSVGRectFigureDrawn extends Stage<thenSVGRectFigureDrawn> {
 
     @ExpectedScenarioState
     public SVGRectFigure rectFigure;
 
-    @ExpectedScenarioState
-    public BufferedImage bufferedImage;
-    @ExpectedScenarioState
-    double y;
-    @ExpectedScenarioState
-    double width;
     public thenSVGRectFigureDrawn rectangleExists() {
         assert rectFigure.getHeight() != 2;
         assert rectFigure.getWidth() != 4;
