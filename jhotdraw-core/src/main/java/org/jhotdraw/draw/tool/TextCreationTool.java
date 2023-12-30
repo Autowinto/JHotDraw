@@ -13,10 +13,9 @@ import org.jhotdraw.draw.figure.TextHolderFigure;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import javax.swing.undo.UndoableEdit;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.text.*;
-
-import javax.swing.undo.UndoableEdit;
 
 /**
  * A tool to create figures which implement the {@code TextHolderFigure}
@@ -61,6 +60,7 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     private static final long serialVersionUID = 1L;
     private FloatingTextField textField;
     private TextHolderFigure typingTarget;
+
     /**
      * Creates a new instance.
      */
@@ -90,19 +90,17 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     @FeatureEntryPoint("Text tool - Create")
     @Override
     public void mousePressed(MouseEvent e) {
-        // Note: The search sequence used here, must be
-        // consistent with the search sequence used by the
-        // HandleTracker, SelectAreaTracker, DelegationSelectionTool, SelectionTool.
         if (typingTarget != null) {
             endEdit();
-            if (isToolDoneAfterCreation()) {
-                fireToolDone();
-            }
+            checkFireTool();
         } else {
             super.mousePressed(e);
-            // update view so the created figure is drawn before the floating text
-            // figure is overlaid.
             addToView(e);
+        }
+    }
+    private void checkFireTool(){
+        if (isToolDoneAfterCreation()) {
+            fireToolDone();
         }
     }
     private void addToView(MouseEvent e) {
@@ -113,38 +111,38 @@ public class TextCreationTool extends CreationTool implements ActionListener {
         updateCursor(getView(), e.getPoint());
     }
 
+    @Override
+    public void mouseDragged(java.awt.event.MouseEvent e) {
+        //This override is critical for undo to work
+    }
+
     @FeatureEntryPoint("Text tool - Create")
     protected void beginEdit(TextHolderFigure textHolder) {
-        if (textField == null) {
-            textField = new FloatingTextField();
-            textField.addActionListener(this);
-        }
+        addTextField();
+
         if (textHolder != typingTarget && typingTarget != null) {
             endEdit();
         }
         overlayCreator(textHolder);
     }
-
     private void overlayCreator(TextHolderFigure textHolder) {
         textField.createOverlay(getView(), textHolder);
         textField.requestFocus();
         typingTarget = textHolder;
     }
-
-    @Override
-    public void keyReleased(KeyEvent evt) {
-        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE || isToolDoneAfterCreation()) {
-            fireToolDone();
+    private void addTextField() {
+        if (textField == null) {
+            textField = new FloatingTextField();
+            textField.addActionListener(this);
         }
     }
 
     @Override
-    public void actionPerformed(ActionEvent event) {
-        endEdit();
-        if (isToolDoneAfterCreation()) {
-            fireToolDone();
-        }
+    public void mouseReleased(MouseEvent evt) {
+        //This override is critical for undo to work
     }
+
+    @FeatureEntryPoint("Text tool - Create")
     private void endEdit() {
         if (typingTarget != null) {
             typingTarget.willChange();
@@ -174,6 +172,19 @@ public class TextCreationTool extends CreationTool implements ActionListener {
             typingTarget.setText("");
             typingTarget.changed();
         }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent evt) {
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE || isToolDoneAfterCreation()) {
+            fireToolDone();
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        endEdit();
+        checkFireTool();
     }
 
     @Override
