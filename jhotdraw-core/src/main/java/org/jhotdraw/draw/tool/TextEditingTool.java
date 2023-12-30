@@ -11,11 +11,10 @@ import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.TextHolderFigure;
 import java.awt.*;
 import java.awt.event.*;
-//import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.UndoableEdit;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.text.*;
-//import org.jhotdraw.util.ResourceBundleUtil;
+
 
 /**
  * A tool to edit figures which implement the {@code TextHolderFigure} interface,
@@ -89,6 +88,7 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
         }
         overlayCreator(textHolder);
     }
+
     private void overlayCreator(TextHolderFigure textHolder) {
         textField.createOverlay(getView(), textHolder);
         textField.requestFocus();
@@ -109,7 +109,7 @@ public class TextEditingTool extends AbstractTool implements ActionListener {
             UndoableEdit edit = TextToolUtility.createUndoableEdit(editedFigure, oldText, newText);
             getDrawing().fireUndoableEditHappened(edit);
 
-            TextToolUtility.removeOverlay(typingTarget, textField);
+            typingTarget = TextToolUtility.removeOverlay(typingTarget, textField);
         }
     }
 
