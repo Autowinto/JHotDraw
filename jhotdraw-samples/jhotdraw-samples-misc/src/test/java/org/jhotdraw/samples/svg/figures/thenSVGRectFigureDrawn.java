@@ -27,6 +27,5 @@ public class thenSVGRectFigureDrawn extends Stage<thenSVGRectFigureDrawn> {
         Assert.assertEquals(8.0 , rectFigure.getX(), 0.001);
         Assert.assertEquals(2.0 , rectFigure.getY(), 0.001);
         return self();
-
     }
 }

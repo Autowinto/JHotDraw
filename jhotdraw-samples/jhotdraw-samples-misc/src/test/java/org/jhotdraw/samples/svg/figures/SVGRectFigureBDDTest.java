@@ -6,7 +6,10 @@ import org.junit.Test;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class SVGRectFigureBDDTest extends ScenarioTest<givenSVGRectRectangleFigure, whenSVGRectFigureDrawing, thenSVGRectFigureDrawn> {
+public class SVGRectFigureBDDTest extends ScenarioTest<
+        givenSVGRectRectangleFigure,
+        whenSVGRectFigureDrawing,
+        thenSVGRectFigureDrawn> {
 
     //BDD test for drawing a rectangle
     @Test
@@ -33,5 +36,4 @@ public class SVGRectFigureBDDTest extends ScenarioTest<givenSVGRectRectangleFigu
         //Check if the rectangle exists
         then().rectangleHasMoved();
     }
-
 }

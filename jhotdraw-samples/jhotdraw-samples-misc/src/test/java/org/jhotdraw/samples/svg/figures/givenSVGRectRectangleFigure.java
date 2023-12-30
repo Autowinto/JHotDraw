@@ -4,6 +4,7 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 
 public class givenSVGRectRectangleFigure extends Stage<givenSVGRectRectangleFigure> {
+
     @ProvidedScenarioState
     private double y = 10;
 

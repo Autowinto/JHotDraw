@@ -20,7 +20,6 @@ public class whenSVGRectFigureDrawing extends Stage<whenSVGRectFigureDrawing> {
         return this;
     }
 
-
     public whenSVGRectFigureDrawing movingRectangle() {
         //Create a new AffineTransform
         transform = new AffineTransform();
@@ -30,7 +29,5 @@ public class whenSVGRectFigureDrawing extends Stage<whenSVGRectFigureDrawing> {
         svgRectFigure.transform(transform);
         //return the rectangle
         return this;
-
-
     }
 }
