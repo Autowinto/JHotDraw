@@ -24,7 +24,7 @@ public class TextToolUtility {
         }
         return typingTarget;
     }
-    public static UndoableEdit createUndoableEdit(TextHolderFigure editedFigure, String oldText, String newText) {
+    public static AbstractUndoableEdit createUndoableEdit(TextHolderFigure editedFigure, String oldText, String newText) {
         return new AbstractUndoableEdit() {
             private static final long serialVersionUID = 1L;
             @Override
