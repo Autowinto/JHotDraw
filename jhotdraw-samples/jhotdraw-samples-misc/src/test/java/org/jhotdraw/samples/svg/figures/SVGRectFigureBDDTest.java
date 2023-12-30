@@ -23,6 +23,7 @@ public class SVGRectFigureBDDTest extends ScenarioTest<givenSVGRectRectangleFigu
         then().rectangleExists(bufferedImage);
     }
 
+    //BDD test for moving a rectangle
     @Test
     public void movingRectangleTest() {
         //Create SVGRectFigure instance
