@@ -7,7 +7,6 @@
  */
 package org.jhotdraw.samples.svg.gui;
 
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.gui.action.ButtonFactory;
 import org.jhotdraw.gui.plaf.palette.PaletteFormattedTextFieldUI;
 import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
@@ -22,7 +21,6 @@ import javax.swing.plaf.SliderUI;
 import javax.swing.text.DefaultFormatterFactory;
 import org.jhotdraw.draw.AttributeKey;
 import org.jhotdraw.draw.DrawingEditor;
-import org.jhotdraw.draw.action.*;
 import org.jhotdraw.draw.event.FigureAttributeEditorHandler;
 import org.jhotdraw.draw.event.SelectionComponentDisplayer;
 import org.jhotdraw.draw.event.SelectionComponentRepainter;
@@ -66,7 +64,6 @@ public class FillToolBar extends AbstractToolBar {
         }
     }
 
-    @FeatureEntryPoint(value = "fill palette")
     @Override
     protected JComponent createDisclosedComponent(int state) {
         JPanel p = null;
