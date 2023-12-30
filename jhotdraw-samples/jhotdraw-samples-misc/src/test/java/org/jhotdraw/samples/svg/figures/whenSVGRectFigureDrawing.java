@@ -6,6 +6,7 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
 public class whenSVGRectFigureDrawing extends Stage<whenSVGRectFigureDrawing> {
     @ExpectedScenarioState
@@ -15,7 +16,15 @@ public class whenSVGRectFigureDrawing extends Stage<whenSVGRectFigureDrawing> {
     @ProvidedScenarioState
     private AffineTransform transform;
 
-    public whenSVGRectFigureDrawing drawingRectangle(Graphics2D g) {
+    @ProvidedScenarioState
+    private BufferedImage bufferedImage;
+
+    public whenSVGRectFigureDrawing drawingRectangle() {
+        //Create BufferedImage instance
+        bufferedImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
+        //Create Graphics2D instance
+        Graphics2D g = bufferedImage.createGraphics();
+        //Draw the rectangle
         this.svgRectFigure.drawStroke(g);
         return this;
     }

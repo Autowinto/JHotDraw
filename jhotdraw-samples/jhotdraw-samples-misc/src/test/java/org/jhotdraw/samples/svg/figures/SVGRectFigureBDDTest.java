@@ -14,16 +14,12 @@ public class SVGRectFigureBDDTest extends ScenarioTest<
     //BDD test for drawing a rectangle
     @Test
     public void drawingRectangleTest() {
-        //Create BufferedImage instance
-        BufferedImage bufferedImage = new BufferedImage(150, 150, BufferedImage.TYPE_INT_ARGB);
-        //Create Graphics2D instance
-        Graphics2D g = bufferedImage.createGraphics();
         //Create SVGRectFigure instance
         given().creatingRectangle();
         //Draw the rectangle
-        when().drawingRectangle(g);
+        when().drawingRectangle();
         //Check if the rectangle exists
-        then().rectangleExists(bufferedImage);
+        then().rectangleExists();
     }
 
     //BDD test for moving a rectangle

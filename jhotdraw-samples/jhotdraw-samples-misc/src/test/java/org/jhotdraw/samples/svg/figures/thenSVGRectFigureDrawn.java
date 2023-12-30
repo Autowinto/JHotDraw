@@ -12,11 +12,14 @@ public class thenSVGRectFigureDrawn extends Stage<thenSVGRectFigureDrawn> {
 
     @ExpectedScenarioState
     public SVGRectFigure rectFigure;
+
+    @ExpectedScenarioState
+    public BufferedImage bufferedImage;
     @ExpectedScenarioState
     double x;
     @ExpectedScenarioState
     double height;
-    public thenSVGRectFigureDrawn rectangleExists(BufferedImage bufferedImage) {
+    public thenSVGRectFigureDrawn rectangleExists() {
         assertNotEquals(1, bufferedImage.getRGB((int) x, (int) (height / 2)));
         return this;
     }
