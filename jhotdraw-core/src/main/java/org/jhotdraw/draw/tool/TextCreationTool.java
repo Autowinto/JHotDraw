@@ -95,7 +95,8 @@ public class TextCreationTool extends CreationTool implements ActionListener {
             checkFireTool();
         } else {
             super.mousePressed(e);
-            addToView(e);
+            addToView();
+            updateCursor(getView(), e.getPoint());
         }
     }
     private void checkFireTool(){
@@ -103,12 +104,11 @@ public class TextCreationTool extends CreationTool implements ActionListener {
             fireToolDone();
         }
     }
-    private void addToView(MouseEvent e) {
+    private void addToView() {
         TextHolderFigure textHolder = (TextHolderFigure) getCreatedFigure();
         getView().clearSelection();
         getView().addToSelection(textHolder);
         beginEdit(textHolder);
-        updateCursor(getView(), e.getPoint());
     }
 
     @Override
@@ -167,7 +167,6 @@ public class TextCreationTool extends CreationTool implements ActionListener {
     private void handleEmptyText() {
         if (createdFigure != null) {
             getDrawing().remove(getAddedFigure());
-            // XXX - Fire undoable edit here!!
         } else {
             typingTarget.setText("");
             typingTarget.changed();
