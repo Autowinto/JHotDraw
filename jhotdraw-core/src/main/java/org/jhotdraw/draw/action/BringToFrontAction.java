@@ -10,6 +10,11 @@ package org.jhotdraw.draw.action;
 import org.jhotdraw.draw.figure.Figure;
 import java.util.*;
 import org.jhotdraw.draw.*;
+import org.jhotdraw.util.ResourceBundleUtil;
+
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 
 /**
  * ToFrontAction.
@@ -26,6 +31,39 @@ public class BringToFrontAction extends AbstractArrangeAction {
      */
     public BringToFrontAction(DrawingEditor editor) {
         super(editor);
+                ResourceBundleUtil labels
+                = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+        labels.configureAction(this, ID);
+        updateEnabledState();
+    }
+
+    @Override
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+        final DrawingView view = getView();
+        final LinkedList<Figure> figures = new LinkedList<>(view.getSelectedFigures());
+        bringToFront(view, figures);
+        fireUndoableEditHappened(new AbstractUndoableEdit() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public String getPresentationName() {
+                ResourceBundleUtil labels
+                        = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
+                return labels.getTextProperty(ID);
+            }
+
+            @Override
+            public void redo() throws CannotRedoException {
+                super.redo();
+                BringToFrontAction.bringToFront(view, figures);
+            }
+
+            @Override
+            public void undo() throws CannotUndoException {
+                super.undo();
+                SendToBackAction.sendToBack(view, figures);
+            }
+        });
     }
 
     public static void bringToFront(DrawingView view, Collection<Figure> figures) {
