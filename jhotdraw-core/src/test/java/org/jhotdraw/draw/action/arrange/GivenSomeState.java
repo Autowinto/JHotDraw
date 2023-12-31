@@ -22,7 +22,6 @@ public class GivenSomeState extends Stage<GivenSomeState> {
 
     Figure figureA, figureC;
 
-
     public GivenSomeState I_Create_Three_Figures() {
         this.figureA = new RectangleFigure(0, 0, 10, 10);
         this.figureB = new RectangleFigure(2, 2, 10, 10);
