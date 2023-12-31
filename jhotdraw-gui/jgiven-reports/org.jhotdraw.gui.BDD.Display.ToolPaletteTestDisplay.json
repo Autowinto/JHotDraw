@@ -1,0 +1,76 @@
+{
+  "className": "org.jhotdraw.gui.BDD.Display.ToolPaletteTestDisplay",
+  "name": "Tool Palette Test Display",
+  "scenarios": [
+    {
+      "className": "org.jhotdraw.gui.BDD.Display.ToolPaletteTestDisplay",
+      "testMethodName": "scenario_The_user_wants_to_hide_a_palette_on_the_tool_bar",
+      "description": "scenario The user wants to hide a palette on the tool bar",
+      "tagIds": [],
+      "explicitParameters": [],
+      "derivedParameters": [],
+      "scenarioCases": [
+        {
+          "caseNr": 1,
+          "steps": [
+            {
+              "name": "a tool palette is shown",
+              "words": [
+                {
+                  "value": "Given",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "a tool palette is shown"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 133361300,
+              "depth": 0,
+              "parentFailed": false
+            },
+            {
+              "name": "the user wants to hide a given palette",
+              "words": [
+                {
+                  "value": "When",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "the user wants to hide a given palette"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 110400,
+              "depth": 0,
+              "parentFailed": false
+            },
+            {
+              "name": "the user clicks the hide button and the palette is hidden",
+              "words": [
+                {
+                  "value": "Then",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "the user clicks the hide button and the palette is hidden"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 105800,
+              "depth": 0,
+              "parentFailed": false
+            }
+          ],
+          "explicitArguments": [],
+          "derivedArguments": [],
+          "status": "SUCCESS",
+          "durationInNanos": 152392500
+        }
+      ],
+      "casesAsTable": false,
+      "durationInNanos": 152392500
+    }
+  ],
+  "tagMap": {}
+}
