@@ -7,14 +7,19 @@
  */
 package org.jhotdraw.gui.plaf.palette;
 
+import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.MouseInputListener;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.ToolBarUI;
+import javax.swing.plaf.UIResource;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import javax.swing.plaf.*;
 
 /**
  * ToolBarUI for palette components.
@@ -32,15 +37,17 @@ import javax.swing.plaf.*;
  */
 public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
 
+
     private static final boolean IS_FLOATING_ALLOWED = false;
-    protected JToolBar toolBar;
+
+    public JToolBar toolBar;
     private boolean floating;
-    private int floatingX;
-    private int floatingY;
+    public int floatingX;
+    public int floatingY;
     private JFrame floatingFrame;
     private RootPaneContainer floatingToolBar;
-    protected DragWindow dragWindow;
-    private Container dockingSource;
+    public DragWindow dragWindow;
+    public Container dockingSource;
     private int dockingSensitivity = 0;
     protected int focusedCompIndex = -1;
     protected Color dockingColor = null;
@@ -134,6 +141,9 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
         if (c.getClientProperty(FOCUSED_COMP_INDEX) != null) {
             focusedCompIndex = ((Integer) (c.getClientProperty(FOCUSED_COMP_INDEX)));
         }
+    }
+    public boolean isFloating() {
+        return floating;
     }
 
     @Override
@@ -420,6 +430,8 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
      *
      * @return a <code>RootPaneContainer</code> object, containing the toolbar.
      */
+
+
     protected RootPaneContainer createFloatingWindow(JToolBar toolbar) {
         class ToolBarDialog extends JDialog {
 
@@ -677,73 +689,136 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
         }
     }
 
+    /**
+     * Refactored code
+     *
+     * Sets the floating state of the toolbar. If floating is enabled and allowed,
+     * the toolbar is removed from its current docking source and placed in a
+     * floating window. If floating is disabled, the toolbar is returned to its
+     * docking source. This method also handles the visibility and location updates
+     * of the floating window, as well as the addition and removal of property
+     * change listeners as needed.
+     */
+
+    public void setFloating(boolean b, Point p) {
+        if (!toolBar.isFloatable()) {
+            return;
+        }
+
+        hideDragWindow();
+        this.floating = b;
+
+        if (b && IS_FLOATING_ALLOWED) {
+            prepareFloating();
+        } else {
+            prepareDocking(p);
+        }
+    }
+
     public void setFloatingLocation(int x, int y) {
         floatingX = x;
         floatingY = y;
     }
 
-    public boolean isFloating() {
-        return floating;
+    public void floatAt(Point position, Point origin) {
+        if (!toolBar.isFloatable()) {
+            return;
+        }
+
+        try {
+            Point global = calculateGlobalPosition(position, origin);
+            Point comparisonPoint = calculateComparisonPoint(global);
+            boolean shouldDock = canDock(dockingSource, comparisonPoint);
+
+            setFloatingLocation(global.x, global.y); // This sets the location for floating
+            setFloating(!shouldDock, shouldDock ? comparisonPoint : null); // This sets the floating state
+        } catch (IllegalComponentStateException e) {
+            // Handle exception if necessary
+        }
     }
 
-    public void setFloating(boolean b, Point p) {
-        if (toolBar.isFloatable() == true) {
-            if (dragWindow != null) {
-                dragWindow.setVisible(false);
-            }
-            this.floating = b;
-            if (b && IS_FLOATING_ALLOWED) {
-                if (dockingSource == null) {
-                    dockingSource = toolBar.getParent();
-                    dockingSource.remove(toolBar);
-                }
-                constraintBeforeFloating = calculateConstraint();
-                if (propertyListener != null) {
-                    UIManager.addPropertyChangeListener(propertyListener);
-                }
-                if (floatingToolBar == null) {
-                    floatingToolBar = createFloatingWindow(toolBar);
-                }
-                floatingToolBar.getContentPane().add(toolBar, BorderLayout.CENTER);
-                if (floatingToolBar instanceof Window) {
-                    ((Window) floatingToolBar).pack();
-                }
-                if (floatingToolBar instanceof Window) {
-                    ((Window) floatingToolBar).setLocation(floatingX, floatingY);
-                }
-                if (floatingToolBar instanceof Window) {
-                    ((Window) floatingToolBar).setVisible(true);
-                }
-            } else {
-                if (floatingToolBar == null) {
-                    floatingToolBar = createFloatingWindow(toolBar);
-                }
-                if (floatingToolBar instanceof Window) {
-                    ((Window) floatingToolBar).setVisible(false);
-                }
-                floatingToolBar.getContentPane().remove(toolBar);
-                Integer constraint = getDockingConstraint(dockingSource,
-                        p);
-                if (constraint == null) {
-                    constraint = 0;
-                }
-                int orientation = mapConstraintToOrientation(constraint);
-                setOrientation(orientation);
-                if (dockingSource == null) {
-                    dockingSource = toolBar.getParent();
-                }
-                if (propertyListener != null) {
-                    UIManager.removePropertyChangeListener(propertyListener);
-                }
-                dockingSource.add(toolBar, constraint.intValue());
-            }
-            dockingSource.invalidate();
-            Container dockingSourceParent = dockingSource.getParent();
-            if (dockingSourceParent != null) {
-                dockingSourceParent.validate();
-            }
-            dockingSource.repaint();
+    private void prepareFloating() {
+        initializeDockingSource();
+        constraintBeforeFloating = calculateConstraint();
+        showFloatingWindow();
+    }
+
+    private void prepareDocking(Point p) {
+        Integer constraint = getDockingConstraint(dockingSource, p);
+        dockToolBar(constraint);
+    }
+
+    private void initializeDockingSource() {
+        if (dockingSource == null) {
+            dockingSource = toolBar.getParent();
+            dockingSource.remove(toolBar);
         }
+    }
+
+    private void showFloatingWindow() {
+        createFloatingToolBar();
+        updateFloatingWindowAppearance();
+    }
+
+    private void createFloatingToolBar() {
+        if (floatingToolBar == null) {
+            floatingToolBar = createFloatingWindow(toolBar);
+        }
+        floatingToolBar.getContentPane().add(toolBar, BorderLayout.CENTER);
+    }
+
+    private void updateFloatingWindowAppearance() {
+        if (floatingToolBar instanceof Window) {
+            Window window = (Window) floatingToolBar;
+            window.pack();
+            window.setLocation(floatingX, floatingY);
+            window.setVisible(true);
+        }
+    }
+
+    private void dockToolBar(Integer constraint) {
+        if (constraint == null) {
+            constraint = 0;
+        }
+        setOrientation(mapConstraintToOrientation(constraint));
+        dockingSource.add(toolBar, constraint);
+        revalidateDockingSource();
+    }
+
+    private void revalidateDockingSource() {
+        dockingSource.invalidate();
+        Container parent = dockingSource.getParent();
+        if (parent != null) {
+            parent.validate();
+        }
+        dockingSource.repaint();
+    }
+
+    private Point calculateGlobalPosition(Point position, Point origin) {
+        Point offset = dragWindow.getOffset();
+        if (offset == null) {
+            offset = new Point(toolBar.getSize().width / 2, toolBar.getSize().height / 2);
+            dragWindow.setOffset(offset);
+        }
+        return new Point(origin.x + position.x - offset.x, origin.y + position.y - offset.y);
+    }
+
+    private Point calculateComparisonPoint(Point global) {
+        Point dockingPosition = dockingSource.getLocationOnScreen();
+        return new Point(global.x - dockingPosition.x, global.y - dockingPosition.y);
+    }
+
+    private void hideDragWindow() {
+        if (dragWindow != null) {
+            dragWindow.setVisible(false);
+        }
+    }
+
+    private void updateDockingSource() {
+        if (dockingSource == null) {
+            dockingSource = toolBar.getParent();
+        }
+        constraintBeforeFloating = calculateConstraint();
     }
 
     private int mapConstraintToOrientation(Object constraint) {
@@ -844,85 +919,103 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
         }
         return null;
     }
-
+    /**
+     * Refactored code
+     *
+     * Handles the dragging of the toolbar to a new location. This method is
+     * responsible for calculating the new position of the drag window and
+     * updating its appearance and visibility based on the toolbar's floatability
+     * and the docking condition.
+     *
+     */
     protected void dragTo(Point position, Point origin) {
-        if (toolBar.isFloatable() == true) {
-            try {
-                if (dragWindow == null) {
-                    dragWindow = createDragWindow(toolBar);
-                }
-                Point offset = dragWindow.getOffset();
-                if (offset == null) {
-                    //Dimension size = toolBar.getPreferredSize();
-                    Dimension size = toolBar.getSize();
-                    offset = new Point(size.width / 2, size.height / 2);
-                    dragWindow.setOffset(offset);
-                }
-                Point global = new Point(origin.x + position.x,
-                        origin.y + position.y);
-                Point dragPoint = new Point(global.x - offset.x,
-                        global.y - offset.y);
-                if (dockingSource == null) {
-                    dockingSource = toolBar.getParent();
-                }
-                constraintBeforeFloating = calculateConstraint();
-                Point dockingPosition = dockingSource.getLocationOnScreen();
-                Point comparisonPoint = new Point(global.x - dockingPosition.x,
-                        global.y - dockingPosition.y);
-                if (canDock(dockingSource, comparisonPoint)) {
-                    dragWindow.setBackground(getDockingColor());
-                    Object constraint = getDockingConstraint(dockingSource,
-                            comparisonPoint);
-                    int orientation = mapConstraintToOrientation(constraint);
-                    dragWindow.setOrientation(orientation);
-                    dragWindow.setBorderColor(dockingBorderColor);
-                } else {
-                    dragWindow.setBackground(getFloatingColor());
-                    dragWindow.setBorderColor(floatingBorderColor);
-                }
-                dragWindow.setLocation(dragPoint.x, dragPoint.y);
-                if (dragWindow.isVisible() == false) {
-                    //Dimension size = toolBar.getPreferredSize();
-                    Dimension size = toolBar.getSize();
-                    dragWindow.setSize(size.width, size.height);
-                    dragWindow.setVisible(true);
-                }
-            } catch (IllegalComponentStateException e) {
-                // allowed empty
+        if (toolBar.isFloatable()) {
+            initializeDragWindow();
+            Point dragPoint = calculateDragPoint(position, origin);
+            updateDockingSource();
+            updateDragWindowAppearance(dragPoint, origin);
+            setDragWindowLocationAndVisibility(dragPoint);
+        }
+    }
+
+    /**
+     * Refactored code
+     *
+     * Initializes the drag window if it has not been created.
+     */
+    private void initializeDragWindow() {
+        if (dragWindow == null) {
+            dragWindow = createDragWindow(toolBar);
+        }
+    }
+
+    /**
+     * Refactored code
+     *
+     * Calculates and returns the new drag point for the drag window.
+     */
+    private Point calculateDragPoint(Point position, Point origin) {
+        Point offset = getDragWindowOffset();
+        return new Point(origin.x + position.x - offset.x, origin.y + position.y - offset.y);
+    }
+
+    /**
+     * Refactored code
+     *
+     * Retrieves and returns the offset for the drag window. If the offset
+     * is not set, it calculates and sets a new offset based on the toolbar's size.
+     */
+    private Point getDragWindowOffset() {
+        Point offset = dragWindow.getOffset();
+        if (offset == null) {
+            Dimension size = toolBar.getSize();
+            offset = new Point(size.width / 2, size.height / 2);
+            dragWindow.setOffset(offset);
+        }
+        return offset;
+    }
+
+
+
+
+    /**
+     * Refactored code
+     *
+     * Updates the appearance of the drag window based on whether the toolbar
+     * can be docked at the current position.
+     */
+    private void updateDragWindowAppearance(Point dragPoint, Point origin) {
+        Point dockingPosition = dockingSource.getLocationOnScreen();
+        Point comparisonPoint = new Point(origin.x - dockingPosition.x, origin.y - dockingPosition.y);
+        if (canDock(dockingSource, comparisonPoint)) {
+            dragWindow.setBackground(getDockingColor());
+            Object constraint = getDockingConstraint(dockingSource, comparisonPoint);
+            int orientation = mapConstraintToOrientation(constraint);
+            dragWindow.setOrientation(orientation);
+            dragWindow.setBorderColor(dockingBorderColor);
+        } else {
+            dragWindow.setBackground(getFloatingColor());
+            dragWindow.setBorderColor(floatingBorderColor);
+        }
+    }
+
+    /**
+     * Refactored code
+     *
+     * Sets the location of the drag window and makes it visible if it's not
+     * already visible.
+     */
+    private void setDragWindowLocationAndVisibility(Point dragPoint) {
+        if (dragWindow != null) {
+            dragWindow.setLocation(dragPoint.x, dragPoint.y);
+            if (!dragWindow.isVisible()) {
+                Dimension size = toolBar.getSize();
+                dragWindow.setSize(size.width, size.height);
+                dragWindow.setVisible(true);
             }
         }
     }
 
-    protected void floatAt(Point position, Point origin) {
-        if (toolBar.isFloatable() == true) {
-            try {
-                Point offset = dragWindow.getOffset();
-                if (offset == null) {
-                    offset = position;
-                    dragWindow.setOffset(offset);
-                }
-                Point global = new Point(origin.x + position.x,
-                        origin.y + position.y);
-                setFloatingLocation(global.x - offset.x,
-                        global.y - offset.y);
-                if (dockingSource != null) {
-                    Point dockingPosition = dockingSource.getLocationOnScreen();
-                    Point comparisonPoint = new Point(global.x - dockingPosition.x,
-                            global.y - dockingPosition.y);
-                    if (canDock(dockingSource, comparisonPoint)) {
-                        setFloating(false, comparisonPoint);
-                    } else {
-                        setFloating(true, null);
-                    }
-                } else {
-                    setFloating(true, null);
-                }
-                dragWindow.setOffset(null);
-            } catch (IllegalComponentStateException e) {
-                // allowed empty
-            }
-        }
-    }
 
     private Handler getHandler() {
         if (handler == null) {
@@ -1305,7 +1398,7 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
         }
     }
 
-    protected class DragWindow extends JWindow {
+    public class DragWindow extends JWindow {
 
         private static final long serialVersionUID = 1L;
         Color borderColor = Color.gray;
