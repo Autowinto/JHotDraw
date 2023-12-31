@@ -52,7 +52,6 @@ public class DefaultDrawingEditor extends AbstractBean implements DrawingEditor 
 
     private class ToolHandler extends ToolAdapter {
 
-
         @Override
         public void areaInvalidated(ToolEvent evt) {
             Rectangle r = evt.getInvalidatedArea();

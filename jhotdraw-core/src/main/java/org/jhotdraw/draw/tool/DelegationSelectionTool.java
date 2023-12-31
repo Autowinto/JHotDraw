@@ -138,6 +138,7 @@ public class DelegationSelectionTool extends SelectionTool {
             }
         }
     }
+
     @Override
     public void mouseDragged(MouseEvent evt) {
         if (popupTimer != null) {
@@ -259,7 +260,6 @@ public class DelegationSelectionTool extends SelectionTool {
      * Hook method which can be overriden by subclasses to provide
      * specialised behaviour in the event of a double click.
      */
-
     protected void handleDoubleClick(MouseEvent evt) {
         if (DEBUG) {
             System.out.println("DelegationSelectionTool.handleDoubleClick " + evt);
