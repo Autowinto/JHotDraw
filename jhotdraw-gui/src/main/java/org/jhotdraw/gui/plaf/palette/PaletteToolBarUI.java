@@ -8,7 +8,6 @@
 package org.jhotdraw.gui.plaf.palette;
 
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -1150,7 +1149,6 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
         Point origin = null;
         boolean isArmed = false;
 
-        @FeatureEntryPoint("tool palette - mouse pressed")
         @Override
         public void mousePressed(MouseEvent evt) {
             if (!tb.isEnabled()) {
@@ -1170,7 +1168,6 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
             }
         }
 
-        @FeatureEntryPoint("tool palette - mouse released")
         @Override
         public void mouseReleased(MouseEvent evt) {
             if (!tb.isEnabled()) {
@@ -1187,7 +1184,6 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
             isDragging = false;
         }
 
-        @FeatureEntryPoint("tool palette - mouse dragged")
         @Override
         public void mouseDragged(MouseEvent evt) {
             if (!tb.isEnabled()) {
@@ -1366,7 +1362,6 @@ public class PaletteToolBarUI extends ToolBarUI implements SwingConstants {
             getHandler().mousePressed(e);
             isDragging = getHandler().isDragging;
         }
-
 
         @Override
         public void mouseReleased(MouseEvent e) {
