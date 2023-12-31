@@ -6,7 +6,7 @@
 	</aspects>
 
 	<weaver>
-<!--		<exclude within="! org.jhotdraw..*"/>-->
+		<exclude within="! org.jhotdraw..*"/>
 		<include within="org.jhotdraw..*"/>
 	</weaver>
 
