@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class JGivenTest extends ScenarioTest<GivenSomeState, WhenSomeAction, ThenSomeOutcome> {
+public class AcceptanceTest extends ScenarioTest<GivenSomeState, WhenSomeAction, ThenSomeOutcome> {
 
     @Test
     public void BringToFrontActionTest() {

@@ -18,7 +18,6 @@ public class WhenSomeAction extends Stage<WhenSomeAction> {
     @ProvidedScenarioState
     Set<Figure> selectedFigures;
 
-
     public WhenSomeAction I_Select_The_Second_Figure() {
             this.selectedFigures = new LinkedHashSet<>();
 
