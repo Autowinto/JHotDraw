@@ -5,10 +5,8 @@ import org.jhotdraw.draw.figure.TextHolderFigure;
 import org.jhotdraw.draw.text.FloatingTextField;
 import org.jhotdraw.util.ResourceBundleUtil;
 
-import javax.swing.*;
 import javax.swing.undo.AbstractUndoableEdit;
 import java.awt.*;
-import java.awt.event.*;
 
 
 public class TextToolUtility {
