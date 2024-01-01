@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
 import org.jhotdraw.gui.plaf.palette.PaletteToolBarUI;
 
@@ -31,7 +30,6 @@ public class JDisclosureToolBar extends JToolBar {
     /**
      * Creates new form.
      */
-    @FeatureEntryPoint("tool palette - tools display")
     public JDisclosureToolBar() {
         setUI(PaletteToolBarUI.createUI(this));
         initComponents();
