@@ -1,26 +1,22 @@
 package org.jhotdraw.draw.figure;
 
-import org.jhotdraw.draw.*;
-import org.jhotdraw.draw.tool.TextEditingTool;
+import org.jhotdraw.draw.text.FloatingTextField;
 import org.jhotdraw.draw.tool.TextToolUtility;
-import org.jhotdraw.undo.UndoRedoManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.w3c.dom.Text;
 
-import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
-import java.awt.event.MouseEvent;
 
 
-public class TextEditingToolTest {
+public class TextToolUtilityTest {
 
     TextHolderFigure txt;
     UndoableEdit edit;
     String initial = "Initial Text";
     String newText = "Redone Text";
+
     @Before
     public void setUp() {
         txt = new TextFigure();
@@ -41,5 +37,12 @@ public class TextEditingToolTest {
         Assert.assertSame(initial, txt.getText());
         edit.redo();
         Assert.assertSame(newText, txt.getText());
+    }
+    @Test
+    public void testRemoveOverlay() {
+        FloatingTextField field = Mockito.mock(FloatingTextField.class);
+        txt.willChange();
+        txt = TextToolUtility.removeOverlay(txt,field);
+        Assert.assertNull(txt);
     }
 }
