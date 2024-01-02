@@ -1,5 +1,7 @@
-package org.jhotdraw.draw.figure;
+package org.jhotdraw.tool.texttool;
 
+import org.jhotdraw.draw.figure.TextFigure;
+import org.jhotdraw.draw.figure.TextHolderFigure;
 import org.jhotdraw.draw.text.FloatingTextField;
 import org.jhotdraw.draw.tool.TextToolUtility;
 import org.junit.Assert;
