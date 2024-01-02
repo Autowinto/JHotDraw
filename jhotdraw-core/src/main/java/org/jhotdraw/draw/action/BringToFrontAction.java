@@ -9,9 +9,12 @@ package org.jhotdraw.draw.action;
 
 import org.jhotdraw.draw.figure.Figure;
 import java.util.*;
-import javax.swing.undo.*;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.util.ResourceBundleUtil;
+
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 
 /**
  * ToFrontAction.
@@ -19,9 +22,8 @@ import org.jhotdraw.util.ResourceBundleUtil;
  * @author Werner Randelshofer
  * @version $Id$
  */
-public class BringToFrontAction extends AbstractSelectedAction {
+public class BringToFrontAction extends AbstractArrangeAction {
 
-    private static final long serialVersionUID = 1L;
     public static final String ID = "edit.bringToFront";
 
     /**
@@ -29,7 +31,7 @@ public class BringToFrontAction extends AbstractSelectedAction {
      */
     public BringToFrontAction(DrawingEditor editor) {
         super(editor);
-        ResourceBundleUtil labels
+                ResourceBundleUtil labels
                 = ResourceBundleUtil.getBundle("org.jhotdraw.draw.Labels");
         labels.configureAction(this, ID);
         updateEnabledState();
@@ -69,5 +71,17 @@ public class BringToFrontAction extends AbstractSelectedAction {
         for (Figure figure : drawing.sort(figures)) {
             drawing.bringToFront(figure);
         }
+    }
+
+    public void order(DrawingView view, Collection<Figure> figures) {
+        bringToFront(view, figures);
+    }
+
+    public void reverseOrder(DrawingView view, Collection<Figure> figures) {
+        SendToBackAction.sendToBack(view, figures);
+    }
+
+    protected String getID() {
+        return ID;
     }
 }

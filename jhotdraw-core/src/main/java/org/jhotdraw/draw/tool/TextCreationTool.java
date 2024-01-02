@@ -136,7 +136,8 @@ public class TextCreationTool extends CreationTool implements ActionListener {
         //This override is critical for undo to work
     }
 
-    private void endEdit() {
+
+    protected void endEdit() {
         if (typingTarget != null) {
             typingTarget.willChange();
             final TextHolderFigure editedFigure = typingTarget;

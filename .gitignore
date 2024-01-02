@@ -6,3 +6,5 @@ nb-configuration.xml
 *.ftf
 *.iml
 /jhotdraw-samples/jhotdraw-samples-misc/nbproject/
+
+*.iml

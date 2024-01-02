@@ -1,7 +1,6 @@
 <aspectj>
-
 	<aspects>
-		<concrete-aspect name="dk.sdu.mmmi.aspects.JHotDraw" extends="dk.sdu.mmmi.featuretracer.lib.ExecutionTracer">
+		<concrete-aspect name="dk.sdu.mmmi.aspects.JHotDraw">
 			<pointcut name="packages" expression="within(org.jhotdraw..*)"/>
 		</concrete-aspect>
 	</aspects>
