@@ -44,7 +44,7 @@ public class TextToolUtilityTest {
     public void testRemoveOverlay() {
         FloatingTextField field = Mockito.mock(FloatingTextField.class);
         txt.willChange();
-        txt = TextToolUtility.removeOverlay(txt,field);
+        txt = TextToolUtility.removeOverlay(txt, field);
         Assert.assertNull(txt);
     }
 }
