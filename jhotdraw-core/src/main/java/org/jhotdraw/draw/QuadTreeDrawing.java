@@ -7,7 +7,6 @@
  */
 package org.jhotdraw.draw;
 
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.draw.figure.AbstractCompositeFigure;
 import java.awt.*;
@@ -140,7 +139,7 @@ public class QuadTreeDrawing extends AbstractDrawing {
             case 1:
                 Figure f = c.iterator().next();
                 return (f.contains(p)) ? f : null;
-            default: 
+            default:
                 for (Figure f2 : getFiguresFrontToBack()) {
                     if (c.contains(f2) && f2.contains(p)) {
                         return f2;
@@ -156,10 +155,10 @@ public class QuadTreeDrawing extends AbstractDrawing {
         switch (c.size()) {
             case 0:
                 return null;
-            case 1: 
+            case 1:
                 Figure f = c.iterator().next();
                 return (f == ignore || !f.contains(p)) ? null : f;
-            default: 
+            default:
                 for (Figure f2 : getFiguresFrontToBack()) {
                     if (f2 != ignore && f2.contains(p)) {
                         return f2;
@@ -178,7 +177,7 @@ public class QuadTreeDrawing extends AbstractDrawing {
             case 1:
                 Figure f = c.iterator().next();
                 return (!ignore.contains(f) || !f.contains(p)) ? null : f;
-            default: 
+            default:
                 for (Figure f2 : getFiguresFrontToBack()) {
                     if (!ignore.contains(f2) && f2.contains(p)) {
                         return f2;
@@ -225,7 +224,7 @@ public class QuadTreeDrawing extends AbstractDrawing {
         LinkedList<Figure> c = new LinkedList<>(quadTree.findIntersects(r));
         switch (c.size()) {
             case 0:
-            // fall through
+                // fall through
             case 1:
                 return c;
             default:
@@ -240,7 +239,8 @@ public class QuadTreeDrawing extends AbstractDrawing {
             Rectangle2D.Double r = f.getBounds();
             if (f.get(TRANSFORM) != null) {
                 Rectangle2D rt = f.get(TRANSFORM).createTransformedShape(r).getBounds2D();
-                r = (rt instanceof Rectangle2D.Double) ? (Rectangle2D.Double) rt : new Rectangle2D.Double(rt.getX(), rt.getY(), rt.getWidth(), rt.getHeight());
+                r = (rt instanceof Rectangle2D.Double) ? (Rectangle2D.Double) rt
+                        : new Rectangle2D.Double(rt.getX(), rt.getY(), rt.getWidth(), rt.getHeight());
             }
             if (f.isVisible() && Geom.contains(bounds, r)) {
                 contained.add(f);
@@ -249,7 +249,6 @@ public class QuadTreeDrawing extends AbstractDrawing {
         return contained;
     }
 
-    @FeatureEntryPoint("A - bringToFront - QuadTreeDrawing")
     @Override
     public void bringToFront(Figure figure) {
         if (children.remove(figure)) {
@@ -259,7 +258,6 @@ public class QuadTreeDrawing extends AbstractDrawing {
         }
     }
 
-    @FeatureEntryPoint("A - sendToBack - QuadTreeDrawing")
     @Override
     public void sendToBack(Figure figure) {
         if (children.remove(figure)) {
@@ -325,7 +323,7 @@ public class QuadTreeDrawing extends AbstractDrawing {
 
     @Override
     protected void drawFill(Graphics2D g) {
-        //throw new UnsupportedOperationException("Not supported yet.");
+        // throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -342,7 +340,8 @@ public class QuadTreeDrawing extends AbstractDrawing {
             if (canvasColor != null && fillOpacity > 0) {
                 canvasColor = new Color(
                         (canvasColor.getRGB() & 0xffffff)
-                        | ((int) (fillOpacity * 255) << 24), true);
+                                | ((int) (fillOpacity * 255) << 24),
+                        true);
                 // Fill the canvas
                 Rectangle2D.Double r = new Rectangle2D.Double(
                         0, 0, get(CANVAS_WIDTH), get(CANVAS_HEIGHT));

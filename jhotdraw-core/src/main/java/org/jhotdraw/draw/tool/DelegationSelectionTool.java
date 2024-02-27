@@ -149,7 +149,6 @@ public class DelegationSelectionTool extends SelectionTool {
             super.mouseDragged(evt);
         }
     }
-
     @Override
     public void mouseClicked(MouseEvent evt) {
         if (DEBUG) {
