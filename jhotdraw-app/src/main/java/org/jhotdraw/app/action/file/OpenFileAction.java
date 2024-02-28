@@ -81,9 +81,6 @@ public class OpenFileAction extends AbstractApplicationAction {
     private static final long serialVersionUID = 1L;
     public static final String ID = "file.open";
 
-    /**
-     * Creates a new instance.
-     */
     public OpenFileAction(Application app) {
         super(app);
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.app.Labels");
@@ -100,6 +97,7 @@ public class OpenFileAction extends AbstractApplicationAction {
         final Application app = getApplication();
         if (app.isEnabled()) {
             app.setEnabled(false);
+
             // Search for an empty view
             View emptyView = app.getActiveView();
             if (emptyView == null
@@ -246,8 +244,6 @@ public class OpenFileAction extends AbstractApplicationAction {
         returnValue[0] = JFileChooser.ERROR_OPTION;
         chooser.rescanCurrentDirectory();
         dialog.setVisible(true);
-        // chooser.firePropertyChange("JFileChooserDialogIsClosingProperty", dialog,
-        // null);
         dialog.removeAll();
         dialog.dispose();
         return returnValue[0];
@@ -276,19 +272,8 @@ public class OpenFileAction extends AbstractApplicationAction {
                 dialog.getRootPane().setWindowDecorationStyle(JRootPane.FILE_CHOOSER_DIALOG);
             }
         }
-        // dialog.pack();
         Preferences prefs = PreferencesUtil.userNodeForPackage(getApplication().getModel().getClass());
         PreferencesUtil.installFramePrefsHandler(prefs, "openChooser", dialog);
-        /*
-         * if (window.getBounds().isEmpty()) {
-         * Rectangle screenBounds = window.getGraphicsConfiguration().getBounds();
-         * dialog.setLocation(screenBounds.x + (screenBounds.width - dialog.getWidth())
-         * / 2,
-         * screenBounds.y + (screenBounds.height - dialog.getHeight()) / 3);
-         * } else {
-         * dialog.setLocationRelativeTo(parent);
-         * }
-         */
         return dialog;
     }
 }
