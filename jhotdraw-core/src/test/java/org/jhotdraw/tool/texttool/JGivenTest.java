@@ -1,10 +1,10 @@
 package org.jhotdraw.tool.texttool;
+
 import com.tngtech.jgiven.junit.ScenarioTest;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class JGivenTest extends ScenarioTest<GivenSomeState, WhenSomeAction, ThenSomeOutcome> {
-
     @Test
     public void CreateTextTest() {
         given().I_Create_A_Text_Object().and().I_Add_The_Text_To_My_Drawing();

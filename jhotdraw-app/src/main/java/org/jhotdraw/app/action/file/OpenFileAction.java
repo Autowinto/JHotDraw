@@ -130,7 +130,7 @@ public class OpenFileAction extends AbstractApplicationAction {
 
     }
 
-    private void processViewsForUniqueURI(URI uri, boolean disposeView) {
+    public void processViewsForUniqueURI(URI uri, boolean disposeView) {
         Application app = getApplication();
 
         if (!app.getModel().isAllowMultipleViewsPerURI()) {
@@ -147,7 +147,7 @@ public class OpenFileAction extends AbstractApplicationAction {
         }
     }
 
-    private View findEmptyView() {
+    public View findEmptyView() {
         Application app = getApplication();
         View emptyView = app.getActiveView();
         if (emptyView == null
@@ -158,12 +158,12 @@ public class OpenFileAction extends AbstractApplicationAction {
         return emptyView;
     }
 
-    private void enableApplication() {
+    public void enableApplication() {
         Application app = getApplication();
         app.setEnabled(true);
     }
 
-    private void disableApplication() {
+    public void disableApplication() {
         Application app = getApplication();
         app.setEnabled(false);
     }

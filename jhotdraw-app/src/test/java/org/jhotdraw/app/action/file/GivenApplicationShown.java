@@ -1,4 +1,4 @@
 package org.jhotdraw.app.action.file;
 
-public class BDDTest {
+public class GivenApplicationShown {
 }

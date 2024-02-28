@@ -1,4 +1,4 @@
 package org.jhotdraw.app.action.file;
 
-public class OpenRecentFileActionTest {
+public class WhenUserOpensFile {
 }
